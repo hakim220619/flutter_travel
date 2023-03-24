@@ -24,20 +24,10 @@ class HttpService {
     });
 
     if (response.statusCode == 200) {
-      // print(jsonDecode(response.body));
       var jsonUsers = jsonDecode(response.body);
-
-      // print(jsonUsers['data']);
-        // await EasyLoading.showSuccess(json[0]);
-      // await Navigator.push(
-      //   context,
-      //   MaterialPageRoute(
-      //       builder: (context) => Dashboard(token: jsonUsers['data'])));
-
       SharedPreferences pref = await SharedPreferences.getInstance();
       await pref.setString("email", email);
       await pref.setBool("is_login", true);
-      // print(email);
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
@@ -52,10 +42,7 @@ class HttpService {
       await EasyLoading.showError(
           "Error Code : ${response.statusCode.toString()}");
     }
-    
   }
-  
-
   static register(email, password, nama, noHp, role, context) async {
     http.Response response = await _client.post(_registerUrl, body: {
       "email": email,
@@ -73,7 +60,6 @@ class HttpService {
         await EasyLoading.showError(json);
       } else {
         print(json);
-        // await EasyLoading.showSuccess(json.success);
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => LoginPage()));
       }

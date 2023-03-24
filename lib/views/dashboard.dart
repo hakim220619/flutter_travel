@@ -33,8 +33,9 @@ class _DashboardState extends State<Dashboard> {
         "Accept": "application/json",
         "Authorization": "Bearer " + widget.token,
       });
-      if (response.statusCode == 401) {
-        // print(response.statusCode);
+      // print(response.statusCode);
+      if (response.statusCode == 200) {
+       
         SharedPreferences preferences = await SharedPreferences.getInstance();
         setState(() {
           preferences.remove("is_login");
