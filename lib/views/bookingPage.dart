@@ -37,7 +37,6 @@ class _AddState extends State<Add> {
     http.Response response = await http.get(Uri.parse(baseUrl));
     if (response.statusCode == 200) {
       var jsonData = json.decode(response.body);
-
       setState(() {
         fromAgent = jsonData['data'];
       });
@@ -72,6 +71,7 @@ class _AddState extends State<Add> {
     super.initState();
     getagentFrom();
     getagentTo();
+    
   }
 
   Widget build(BuildContext context) {
@@ -244,6 +244,7 @@ class _AddState extends State<Add> {
                                     if (_formkey.currentState!.validate()) {
                                       // await ListBooking(fromAgentValue, toAgentValue,
                                       //     dateofJourney.text, context);
+                                      Future.delayed(Duration(seconds: 5), () {
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
@@ -257,6 +258,7 @@ class _AddState extends State<Add> {
                                                     dateofJourney:
                                                         dateofJourney.text),
                                           ));
+                                      });
                                     }
                                   },
                                   child: AnimatedContainer(

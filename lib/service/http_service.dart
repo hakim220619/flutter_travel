@@ -5,7 +5,9 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:travel/views/dashboard.dart';
 import 'package:travel/views/listBooking.dart';
+import 'package:travel/views/login.dart';
 import 'package:travel/views/welcome.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HttpService {
   static final _client = http.Client();
@@ -23,20 +25,36 @@ class HttpService {
 
     if (response.statusCode == 200) {
       // print(jsonDecode(response.body));
-      // var json = jsonDecode(response.body);
+      var jsonUsers = jsonDecode(response.body);
 
-      if (response.statusCode == 200) {
+      // print(jsonUsers['data']);
         // await EasyLoading.showSuccess(json[0]);
-        await Navigator.push(
-            context, MaterialPageRoute(builder: (context) => Dashboard()));
-      } else {
-        // EasyLoading.showError(json[0]);
-      }
+      // await Navigator.push(
+      //   context,
+      //   MaterialPageRoute(
+      //       builder: (context) => Dashboard(token: jsonUsers['data'])));
+
+      SharedPreferences pref = await SharedPreferences.getInstance();
+      await pref.setString("email", email);
+      await pref.setBool("is_login", true);
+      // print(email);
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (BuildContext context) =>
+              Dashboard(token: jsonUsers['data']),
+        ),
+        (route) => false,
+      );
+      
+
     } else {
       await EasyLoading.showError(
           "Error Code : ${response.statusCode.toString()}");
     }
+    
   }
+  
 
   static register(email, password, nama, noHp, role, context) async {
     http.Response response = await _client.post(_registerUrl, body: {
@@ -57,7 +75,7 @@ class HttpService {
         print(json);
         // await EasyLoading.showSuccess(json.success);
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => Dashboard()));
+            context, MaterialPageRoute(builder: (context) => LoginPage()));
       }
     } else {
       await EasyLoading.showError(
@@ -85,7 +103,8 @@ class HttpService {
         print(json);
         // await EasyLoading.showSuccess(json.success);
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => Dashboard()));
+            context,
+            MaterialPageRoute(builder: (context) => Dashboard(token: "")));
       }
     } else {
       await EasyLoading.showError(

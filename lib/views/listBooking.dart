@@ -27,7 +27,7 @@ class _ListBookingState extends State<ListBooking> {
   var tujuan;
   Future search() async {
     try {
-      print({widget.fromAgentValue});
+      // print({widget.fromAgentValue});
       var _SearchUrl =
           Uri.parse('https://travel.dlhcode.com/api/cek_persediaan_tiket');
       http.Response response = await _client.post(_SearchUrl, body: {
@@ -41,7 +41,7 @@ class _ListBookingState extends State<ListBooking> {
 
         setState(() {
           _get = data['data'];
-          print(_get);
+          // print(_get);
         });
       }
     } catch (e) {
@@ -53,6 +53,12 @@ class _ListBookingState extends State<ListBooking> {
   void initState() {
     super.initState();
     search();
+  }
+
+  Future refresh() async {
+    setState(() {
+      search();
+    });
   }
 
   @override
@@ -77,44 +83,51 @@ class _ListBookingState extends State<ListBooking> {
               ),
             ),
           ),
-          body: ListView.builder(
-            itemCount: _get.length,
-            itemBuilder: (context, index) => Card(
-              margin: const EdgeInsets.all(10),
-              elevation: 8,
-              child: ListTile(
-                leading: CircleAvatar(
-                  backgroundColor: Color.fromARGB(255, 131, 90, 214),
-                  child: Icon(Icons.directions_car),
+        body: Center(
+          child: RefreshIndicator(
+            onRefresh: refresh,
+            child: ListView.builder(
+              itemCount: _get.length,
+              itemBuilder: (context, index) => Card(
+                margin: const EdgeInsets.all(10),
+                elevation: 8,
+                child: ListTile(
+                  leading: CircleAvatar(
+                    backgroundColor: Color.fromARGB(255, 131, 90, 214),
+                    child: Icon(Icons.directions_car),
+                  ),
+                  title: Text(
+                    _get[index]['asal'] + ' | ' + _get[index]['tujuan'],
+                    style: new TextStyle(fontSize: 18.0),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  subtitle: Text(
+                    _get[index]['harga'],
+                    maxLines: 2,
+                    style: new TextStyle(fontSize: 18.0),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (
+                            context,
+                          ) =>
+                              PesanPage(
+                                  asalKey: _get[index]['asal'],
+                                  tujuanKey: _get[index]['tujuan'],
+                                  tanggalKey: widget.dateofJourney),
+                        ));
+                  },
                 ),
-                title: Text(
-                  _get[index]['asal'] + '|' + _get[index]['tujuan'],
-                  style: new TextStyle(fontSize: 18.0),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                subtitle: Text(
-                  _get[index]['harga'],
-                  maxLines: 2,
-                  style: new TextStyle(fontSize: 18.0),
-                  overflow: TextOverflow.ellipsis,
-                ),
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (
-                          context,
-                        ) =>
-                            PesanPage(
-                                asalKey: _get[index]['asal'],
-                                tujuanKey: _get[index]['tujuan'],
-                                tanggalKey: widget.dateofJourney),
-                      ));
-                },
               ),
             ),
-          )),
+          ),
+        ),
+      ),
     );
+    
   }
 }

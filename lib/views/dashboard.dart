@@ -4,28 +4,58 @@ import 'dart:convert';
 import 'dart:async';
 import 'login.dart';
 import 'package:http/http.dart' as http;
-import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:travel/views/listBooking.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
-class Dashboard extends StatelessWidget {
+class Dashboard extends StatefulWidget {
   // const Dashboard({Key? key}) : super(key: key);
   const Dashboard({
     Key? key,
-    this.id,
-    this.date,
-    this.fromcity,
-    this.tocity,
-  }) : super(key: key);
+    required this.token
 
-  final String? id;
-  final String? date;
-  final String? fromcity;
-  final String? tocity;
+  }) : super(key: key);
+final String token;
 
   @override
+  State<Dashboard> createState() => _DashboardState();
+}
+
+class _DashboardState extends State<Dashboard> {
+  static final _client = http.Client();
+  
+  @override
+  static var _logoutUrl = Uri.parse('https://travel.dlhcode.com/api/logout');
+
+  Future Logout() async {
+    try {
+      http.Response response = await _client.get(_logoutUrl, headers: {
+        "Accept": "application/json",
+        "Authorization": "Bearer " + widget.token,
+      });
+      if (response.statusCode == 401) {
+        // print(response.statusCode);
+        SharedPreferences preferences = await SharedPreferences.getInstance();
+        setState(() {
+          preferences.remove("is_login");
+          preferences.remove("email");
+        });
+
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (BuildContext context) => LoginPage(),
+          ),
+          (route) => false,
+        );
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
   Widget build(BuildContext context) {
+    
     return MaterialApp(
         home: Scaffold(
             appBar: AppBar(
@@ -33,7 +63,10 @@ class Dashboard extends StatelessWidget {
               actions: [
                 IconButton(
                   icon: Icon(Icons.power_settings_new),
-                  onPressed: () {},
+                  onPressed: () {
+                    Logout();
+                    // _handleLogout;
+                  },
                 )
               ],
             ),
@@ -68,7 +101,7 @@ class _MenuState extends State<Menu> {
     http.Response response = await http.get(Uri.parse(baseUrl));
     if (response.statusCode == 200) {
       var jsonData = json.decode(response.body);
-      print(jsonData);
+      // print(jsonData);
       setState(() {
         fromAgent = jsonData['data'];
       });
@@ -94,6 +127,10 @@ class _MenuState extends State<Menu> {
       getagentFrom();
       getagentTo();
     });
+  }
+  void initState() {
+    getagentFrom();
+    getagentTo();
   }
 
   static const TextStyle optionStyle =

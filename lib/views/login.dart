@@ -88,8 +88,8 @@ class _LoginPageState extends State<LoginPage> {
           ElevatedButton(
             onPressed: () {
               if (_formKey.currentState!.validate()) {
-                print(password);
-                print(email);
+                // print(password);
+                // print(email);
                 HttpService.login(email, password, context);
               }
             },
