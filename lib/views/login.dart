@@ -16,6 +16,8 @@ class _LoginPageState extends State<LoginPage> {
   late String email;
   late String password;
   final _formKey = GlobalKey<FormState>();
+  static const IconData directions_car =
+      IconData(0xe1d7, fontFamily: 'MaterialIcons');
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -26,12 +28,14 @@ class _LoginPageState extends State<LoginPage> {
             height: 100,
           ),
           Container(
-              alignment: Alignment.center,
-              padding: const EdgeInsets.all(10),
-              child: const Text(
-                'Sign in',
-                style: TextStyle(fontSize: 20),
-              )),
+            alignment: Alignment.center,
+            padding: const EdgeInsets.all(10),
+            child: Center(
+                child: Icon(
+              directions_car,
+              size: 100,
+            )),
+          ),
           Container(
             padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
             child: TextFormField(

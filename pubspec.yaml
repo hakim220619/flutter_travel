@@ -43,6 +43,7 @@ dependencies:
   flutter_easyloading: ^3.0.5
   email_validator: ^2.1.17
   pull_to_refresh: ^2.0.0
+  profile: ^0.0.1
 
 dev_dependencies:
   flutter_test:

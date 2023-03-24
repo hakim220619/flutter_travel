@@ -7,15 +7,14 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:travel/views/listBooking.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:profile/profile.dart';
 
 class Dashboard extends StatefulWidget {
   // const Dashboard({Key? key}) : super(key: key);
-  const Dashboard({
-    Key? key,
-    required this.token
-
-  }) : super(key: key);
-final String token;
+  const Dashboard({Key? key, required this.token, required this.email})
+      : super(key: key);
+  final String token;
+  final String email;
 
   @override
   State<Dashboard> createState() => _DashboardState();
@@ -23,7 +22,7 @@ final String token;
 
 class _DashboardState extends State<Dashboard> {
   static final _client = http.Client();
-  
+
   @override
   static var _logoutUrl = Uri.parse('https://travel.dlhcode.com/api/logout');
 
@@ -35,7 +34,6 @@ class _DashboardState extends State<Dashboard> {
       });
       // print(response.statusCode);
       if (response.statusCode == 200) {
-       
         SharedPreferences preferences = await SharedPreferences.getInstance();
         setState(() {
           preferences.remove("is_login");
@@ -56,7 +54,6 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Widget build(BuildContext context) {
-    
     return MaterialApp(
         home: Scaffold(
             appBar: AppBar(
@@ -71,13 +68,13 @@ class _DashboardState extends State<Dashboard> {
                 )
               ],
             ),
-            body: Menu()));
+            body: Menu(email: widget.email)));
   }
 }
 
 class Menu extends StatefulWidget {
-  const Menu({super.key});
-
+  const Menu({super.key, required this.email});
+  final String email;
   @override
   State<Menu> createState() => _MenuState();
 }
@@ -129,6 +126,7 @@ class _MenuState extends State<Menu> {
       getagentTo();
     });
   }
+
   void initState() {
     getagentFrom();
     getagentTo();
@@ -330,10 +328,18 @@ class _MenuState extends State<Menu> {
         'Index 1: Business',
         style: optionStyle,
       ),
-      Text(
-        'Index 2: School',
-        style: optionStyle,
-      ),
+      Container(
+        margin: EdgeInsets.only(top: 30),
+        child: Profile(
+          imageUrl:
+              "https://images.unsplash.com/photo-1598618356794-eb1720430eb4?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
+          name: "Shamim Miah",
+          email: widget.email,
+          phone_number: "01757736053",
+          website: "shamimmiah.com",
+          designation: "",
+        ),
+      )
     ];
     return Scaffold(
       body: Center(

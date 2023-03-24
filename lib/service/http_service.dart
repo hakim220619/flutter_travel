@@ -31,18 +31,19 @@ class HttpService {
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
-          builder: (BuildContext context) =>
-              Dashboard(token: jsonUsers['data']),
+          builder: (BuildContext context) => Dashboard(
+            token: jsonUsers['data'],
+            email: email,
+          ),
         ),
         (route) => false,
       );
-      
-
     } else {
       await EasyLoading.showError(
           "Error Code : ${response.statusCode.toString()}");
     }
   }
+
   static register(email, password, nama, noHp, role, context) async {
     http.Response response = await _client.post(_registerUrl, body: {
       "email": email,
@@ -51,15 +52,15 @@ class HttpService {
       "no_hp": noHp,
       "role_id": role,
     });
-    print(response);
+    // print(response);
     if (response.statusCode == 200) {
       var json = jsonDecode(response.body.toString());
-      print(json);
+      // print(json);
       if (json == 'username already exist') {
-        print(json);
+        // print(json);
         await EasyLoading.showError(json);
       } else {
-        print(json);
+        // print(json);
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => LoginPage()));
       }
@@ -90,7 +91,11 @@ class HttpService {
         // await EasyLoading.showSuccess(json.success);
         Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => Dashboard(token: "")));
+            MaterialPageRoute(
+                builder: (context) => Dashboard(
+                      token: "",
+                      email: "",
+                    )));
       }
     } else {
       await EasyLoading.showError(
