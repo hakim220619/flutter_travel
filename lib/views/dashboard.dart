@@ -132,6 +132,7 @@ class _MenuState extends State<Menu> {
     getagentTo();
   }
 
+  var profilePhoto = "http://cdn.onlinewebfonts.com/svg/img_299586.png";
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
@@ -329,17 +330,81 @@ class _MenuState extends State<Menu> {
         style: optionStyle,
       ),
       Container(
-        margin: EdgeInsets.only(top: 30),
-        child: Profile(
-          imageUrl:
-              "https://images.unsplash.com/photo-1598618356794-eb1720430eb4?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
-          name: "Shamim Miah",
-          email: widget.email,
-          phone_number: "01757736053",
-          website: "shamimmiah.com",
-          designation: "",
-        ),
-      )
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: 10),
+              Card(
+                margin: EdgeInsets.all(8),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                child: Center(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image.network(profilePhoto,
+                        width: 140, height: 140, fit: BoxFit.fill),
+                  ),
+                ),
+              ),
+              // Center(
+              //   child: Text(
+              //     widget.email,
+              //     style: TextStyle(color: Colors.grey.shade800),
+              //   ),
+              // ),
+              SizedBox(
+                height: 20,
+              ),
+              Card(
+                  margin: EdgeInsets.all(8),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          const Text('Nama: ',
+                              style: TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.bold)),
+                          Text("",
+                              style: const TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.w400)),
+                        ],
+                      ),
+                      const SizedBox(height: 25),
+                      Row(children: [
+                        const Text('Umur: ',
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold)),
+                        Text("",
+                            style: const TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.w400))
+                      ]),
+                      const SizedBox(height: 25),
+                      Row(children: [
+                        const Text(
+                            ''
+                            'Jenis Kelamin: ',
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold)),
+                        Text("",
+                            style: const TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.w400))
+                      ]),
+                      const SizedBox(height: 25),
+                      Row(children: [
+                        const Text('Nomor: ',
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold)),
+                        Text("",
+                            style: const TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.w400))
+                      ]),
+                    ],
+                  ))
+            ]),
+      ),
     ];
     return Scaffold(
       body: Center(
