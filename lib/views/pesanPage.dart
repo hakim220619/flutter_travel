@@ -7,13 +7,19 @@ import 'package:travel/service/http_service.dart';
 class PesanPage extends StatefulWidget {
   const PesanPage(
       {Key? key,
+    required this.idKey,
       required this.asalKey,
       required this.tujuanKey,
-      required this.tanggalKey})
+    required this.tanggalKey,
+    required this.hargaKey,
+  })
       : super(key: key);
+  final String idKey;
   final String asalKey;
   final String tujuanKey;
   final String tanggalKey;
+  final String hargaKey;
+
 
   @override
   State<PesanPage> createState() => _PesanPageState();
@@ -187,7 +193,8 @@ class _PesanPageState extends State<PesanPage> {
                   InkWell(
                       onTap: () async {
                         await HttpService.pesan(nama, email, noHp,
-                            widget.asalKey, widget.tujuanKey, tanggal, context);
+                            widget.idKey,
+                            widget.hargaKey, context);
                       },
                       child: Container(
                         margin: const EdgeInsets.symmetric(

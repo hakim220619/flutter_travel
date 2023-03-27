@@ -108,6 +108,7 @@ class _ListBookingState extends State<ListBooking> {
                     style: new TextStyle(fontSize: 18.0),
                     overflow: TextOverflow.ellipsis,
                   ),
+                  
                   onTap: () {
                     Navigator.push(
                         context,
@@ -118,6 +119,8 @@ class _ListBookingState extends State<ListBooking> {
                               PesanPage(
                                   asalKey: _get[index]['asal'],
                                   tujuanKey: _get[index]['tujuan'],
+                                  idKey: _get[index]['id'],
+                                  hargaKey: _get[index]['harga'],
                                   tanggalKey: widget.dateofJourney),
                         ));
                   },

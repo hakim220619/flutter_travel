@@ -7,7 +7,6 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:travel/views/listBooking.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:profile/profile.dart';
 
 class Dashboard extends StatefulWidget {
   // const Dashboard({Key? key}) : super(key: key);
@@ -57,7 +56,8 @@ class _DashboardState extends State<Dashboard> {
     return MaterialApp(
         home: Scaffold(
             appBar: AppBar(
-              title: Text("Dashboard"),
+              centerTitle: true,
+              title: Text("Travel"),
               actions: [
                 IconButton(
                   icon: Icon(Icons.power_settings_new),
@@ -119,11 +119,45 @@ class _MenuState extends State<Menu> {
     }
   }
 
+  List _get = [];
+  static final _client = http.Client();
+  var asal;
+  var tujuan;
+  Future search() async {
+    try {
+      // print({widget.fromAgentValue});
+      var _SearchUrl =
+          Uri.parse('https://travel.dlhcode.com/api/cek_persediaan_tiket');
+      http.Response response = await _client.post(_SearchUrl, body: {
+        // "asal": widget.fromAgentValue,
+        // "tujuan": widget.toAgentValue,
+        // "tgl_keberangkatan": widget.dateofJourney,
+      });
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+
+        setState(() {
+          _get = data['data'];
+          // print(_get);
+        });
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
       getagentFrom();
       getagentTo();
+    });
+  }
+
+  Future refresh() async {
+    setState(() {
+      search();
     });
   }
 
@@ -325,9 +359,45 @@ class _MenuState extends State<Menu> {
           ),
         ),
       ),
-      Text(
-        'Index 1: Business',
-        style: optionStyle,
+      Center(
+        child: RefreshIndicator(
+          onRefresh: refresh,
+          child: ListView.builder(
+            itemCount: _get.length,
+            itemBuilder: (context, index) => Card(
+              margin: const EdgeInsets.all(10),
+              elevation: 8,
+              child: ListTile(
+                leading: CircleAvatar(
+                  backgroundColor: Color.fromARGB(255, 131, 90, 214),
+                  child: Icon(Icons.directions_car),
+                ),
+                title: Text(
+                  _get[index]['asal'] + ' | ' + _get[index]['tujuan'],
+                  style: new TextStyle(fontSize: 18.0),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                subtitle: Text(
+                  _get[index]['harga'],
+                  maxLines: 2,
+                  style: new TextStyle(fontSize: 18.0),
+                  overflow: TextOverflow.ellipsis,
+                ),
+                onTap: () {
+                  // Navigator.push(
+                  //     context,
+                  //     MaterialPageRoute(
+                  //       builder: (
+                  //         context,
+                  //       ) =>
+                  //       {};
+                  //     ));
+                },
+              ),
+            ),
+          ),
+        ),
       ),
       Container(
         child: Column(
