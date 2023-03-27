@@ -52,6 +52,40 @@ class _DashboardState extends State<Dashboard> {
     }
   }
 
+  Future<void> _showMyDialog(String title, String text, String nobutton,
+      String yesbutton, Function onTap, bool isValue) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: isValue, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text(text),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text(nobutton),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text(yesbutton),
+              onPressed: () async {
+                onTap();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   Widget build(BuildContext context) {
     return MaterialApp(
         home: Scaffold(
@@ -62,7 +96,16 @@ class _DashboardState extends State<Dashboard> {
                 IconButton(
                   icon: Icon(Icons.power_settings_new),
                   onPressed: () {
-                    Logout();
+                    _showMyDialog('Log Out', 'Are you sure you want to logout?',
+                        'No', 'Yes', () async {
+                      Logout();
+                    }, false);
+                    /*Navigator.push(context, MaterialPageRoute(builder: (context)=>SignupPage()));*/
+                    child:
+                    Text(
+                      'Log Out',
+                      style: TextStyle(color: Colors.white),
+                    );
                     // _handleLogout;
                   },
                 )
