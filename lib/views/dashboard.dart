@@ -148,7 +148,6 @@ class _MenuState extends State<Menu> {
     http.Response response = await http.get(Uri.parse(baseUrl));
     if (response.statusCode == 200) {
       var jsonData = json.decode(response.body);
-      // print(jsonData);
       setState(() {
         fromAgent = jsonData['data'];
       });

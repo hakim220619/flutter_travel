@@ -31,7 +31,7 @@ class HttpService {
 // print(response.statusCode);
     if (response.statusCode == 200) {
       var jsonUsers = jsonDecode(response.body);
-      // print(jsonUsers['user']['id']);
+     
       var id_user = jsonUsers['user']['id'];
       SharedPreferences pref = await SharedPreferences.getInstance();
       await pref.setString("email", email);
