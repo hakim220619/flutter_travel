@@ -61,7 +61,7 @@ class _DashboardState extends State<Dashboard> {
       String yesbutton, Function onTap, bool isValue) async {
     return showDialog<void>(
       context: context,
-      barrierDismissible: isValue, // user must tap button!
+      barrierDismissible: isValue,
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(title),
@@ -105,13 +105,13 @@ class _DashboardState extends State<Dashboard> {
                         'No', 'Yes', () async {
                       Logout();
                     }, false);
-                    /*Navigator.push(context, MaterialPageRoute(builder: (context)=>SignupPage()));*/
+                    
                     child:
                     Text(
                       'Log Out',
                       style: TextStyle(color: Colors.white),
                     );
-                    // _handleLogout;
+                    
                   },
                 )
               ],
