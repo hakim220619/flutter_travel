@@ -28,7 +28,6 @@ class HttpService {
       "email": email,
       "password": password,
     });
-// print(response.statusCode);
     if (response.statusCode == 200) {
       var jsonUsers = jsonDecode(response.body);
      
@@ -62,10 +61,10 @@ class HttpService {
       "no_hp": noHp,
       "role_id": role,
     });
-    // print(response);
+    
     if (response.statusCode == 200) {
       var json = jsonDecode(response.body.toString());
-      // print(json);
+     
       if (json == 'username already exist') {
         // print(json);
         await EasyLoading.showError(json);
