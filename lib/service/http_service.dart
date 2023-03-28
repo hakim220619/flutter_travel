@@ -66,10 +66,10 @@ class HttpService {
       var json = jsonDecode(response.body.toString());
      
       if (json == 'username already exist') {
-        // print(json);
+       
         await EasyLoading.showError(json);
       } else {
-        // print(json);
+      
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => LoginPage()));
       }
@@ -82,14 +82,14 @@ class HttpService {
   static pesan(nama, email, noHp, id_persediaan_tiket, harga, context) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var id_user = prefs.getInt('id_user');
-    // print(prefs.getInt('id_user'));
+ 
     Random objectname = Random();
     int number = objectname.nextInt(10000000);
     String username = 'SB-Mid-server-z5T9WhivZDuXrJxC7w-civ_k';
     String password = '';
     String basicAuth =
         'Basic ' + base64Encode(utf8.encode('$username:$password'));
-    // print(basicAuth);
+  
     http.Response responseMidtrans = await _client.post(_pesanmidtransUrl,
         headers: <String, String>{
           'authorization': basicAuth,
@@ -111,12 +111,12 @@ class HttpService {
       "order_id": number.toString(),
       "redirect_url": jsonMidtrans['redirect_url'],
     });
-    // print(response.body);
+  
     if (response.statusCode == 200) {
       var json = jsonDecode(response.body.toString());
-      // print(json['success'] == true);
+     
       if (json['success'] == false) {
-        // print(json);
+       
         await EasyLoading.showError(json);
       } else {
         print(json);
