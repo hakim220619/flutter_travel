@@ -256,7 +256,9 @@ class _AddState extends State<Add> {
                                                         fromAgentValue,
                                                     toAgentValue: toAgentValue,
                                                     dateofJourney:
-                                                        dateofJourney.text),
+                                                    dateofJourney.text,
+                                                email: "",
+                                              ),
                                           ));
                                       });
                                     }

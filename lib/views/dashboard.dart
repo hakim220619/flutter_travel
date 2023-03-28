@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:travel/views/paypage.dart';
 import 'dart:convert';
 import 'dart:async';
 import 'login.dart';
@@ -9,11 +10,15 @@ import 'package:travel/views/listBooking.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class Dashboard extends StatefulWidget {
-  // const Dashboard({Key? key}) : super(key: key);
-  const Dashboard({Key? key, required this.token, required this.email})
+  const Dashboard(
+      {Key? key,
+      required this.token,
+      required this.email,
+      required this.id_user})
       : super(key: key);
   final String token;
   final String email;
+  final String id_user;
 
   @override
   State<Dashboard> createState() => _DashboardState();
@@ -31,11 +36,11 @@ class _DashboardState extends State<Dashboard> {
         "Accept": "application/json",
         "Authorization": "Bearer " + widget.token,
       });
-      // print(response.statusCode);
       if (response.statusCode == 200) {
         SharedPreferences preferences = await SharedPreferences.getInstance();
         setState(() {
           preferences.remove("is_login");
+          preferences.remove("id_user");
           preferences.remove("email");
         });
 
@@ -111,13 +116,14 @@ class _DashboardState extends State<Dashboard> {
                 )
               ],
             ),
-            body: Menu(email: widget.email)));
+            body: Menu(email: widget.email, id_user: widget.id_user)));
   }
 }
 
 class Menu extends StatefulWidget {
-  const Menu({super.key, required this.email});
+  const Menu({super.key, required this.email, required this.id_user});
   final String email;
+  final String id_user;
   @override
   State<Menu> createState() => _MenuState();
 }
@@ -168,21 +174,18 @@ class _MenuState extends State<Menu> {
   var tujuan;
   Future search() async {
     try {
-      // print({widget.fromAgentValue});
-      var _SearchUrl =
-          Uri.parse('https://travel.dlhcode.com/api/cek_persediaan_tiket');
-      http.Response response = await _client.post(_SearchUrl, body: {
-        // "asal": widget.fromAgentValue,
-        // "tujuan": widget.toAgentValue,
-        // "tgl_keberangkatan": widget.dateofJourney,
+      var _riwayatTiket =
+          Uri.parse('https://travel.dlhcode.com/api/riwayat_tiket');
+      http.Response response = await _client.post(_riwayatTiket, body: {
+        "email": widget.email,
+        "id_user": widget.id_user,
       });
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-
+        print(data);
         setState(() {
           _get = data['data'];
-          // print(_get);
         });
       }
     } catch (e) {
@@ -195,6 +198,7 @@ class _MenuState extends State<Menu> {
       _selectedIndex = index;
       getagentFrom();
       getagentTo();
+      search();
     });
   }
 
@@ -207,6 +211,7 @@ class _MenuState extends State<Menu> {
   void initState() {
     getagentFrom();
     getagentTo();
+    search();
   }
 
   var profilePhoto = "http://cdn.onlinewebfonts.com/svg/img_299586.png";
@@ -369,7 +374,8 @@ class _MenuState extends State<Menu> {
                                         ListBooking(
                                             fromAgentValue: fromAgentValue,
                                             toAgentValue: toAgentValue,
-                                            dateofJourney: dateofJourney.text),
+                                            dateofJourney: dateofJourney.text,
+                                            email: widget.email),
                                   ));
                             }
                           },
@@ -416,26 +422,28 @@ class _MenuState extends State<Menu> {
                   child: Icon(Icons.directions_car),
                 ),
                 title: Text(
-                  _get[index]['asal'] + ' | ' + _get[index]['tujuan'],
+                  "Dari " + _get[index]['asal'] + ' | ' + _get[index]['tujuan'],
                   style: new TextStyle(fontSize: 18.0),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
                 subtitle: Text(
-                  _get[index]['harga'],
+                  _get[index]['status'] +
+                      " | "
+                          "Tgl " +
+                      _get[index]['tgl_keberangkatan']
+                          .toString()
+                          .substring(0, 10),
                   maxLines: 2,
                   style: new TextStyle(fontSize: 18.0),
                   overflow: TextOverflow.ellipsis,
                 ),
                 onTap: () {
-                  // Navigator.push(
-                  //     context,
-                  //     MaterialPageRoute(
-                  //       builder: (
-                  //         context,
-                  //       ) =>
-                  //       {};
-                  //     ));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => payPage(
+                              redirect_url: _get[index]['redirect_url'])));
                 },
               ),
             ),

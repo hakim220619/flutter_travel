@@ -3,6 +3,7 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:travel/service/http_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PesanPage extends StatefulWidget {
   const PesanPage(
@@ -37,7 +38,12 @@ class _PesanPageState extends State<PesanPage> {
   var asal;
   var tujuan;
   final _formkey = GlobalKey<FormState>();
+SharedPreferences? preferences;
+
+
+ 
   Widget build(BuildContext context) {
+    
     return Scaffold(
       appBar: AppBar(title: Text("Pesan")),
       body: SafeArea(
@@ -79,6 +85,7 @@ class _PesanPageState extends State<PesanPage> {
                             height: 10.0,
                           ),
                           TextFormField(
+                            
                             controller: Email,
                             onChanged: (value) {
                               setState(() {
@@ -191,11 +198,15 @@ class _PesanPageState extends State<PesanPage> {
                     ),
                   ),
                   InkWell(
+                    
                       onTap: () async {
+                        if (_formkey.currentState!.validate()) {
                         await HttpService.pesan(nama, email, noHp,
                             widget.idKey,
                             widget.hargaKey, context);
+                        }
                       },
+                      
                       child: Container(
                         margin: const EdgeInsets.symmetric(
                             horizontal: 20, vertical: 10),

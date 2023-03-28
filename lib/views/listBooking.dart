@@ -11,11 +11,13 @@ class ListBooking extends StatefulWidget {
       {Key? key,
       required this.fromAgentValue,
       required this.toAgentValue,
-      required this.dateofJourney})
+      required this.dateofJourney,
+      required this.email})
       : super(key: key);
   final String fromAgentValue;
   final String toAgentValue;
   final String dateofJourney;
+  final String email;
   @override
   _ListBookingState createState() => _ListBookingState();
 }
@@ -121,7 +123,8 @@ class _ListBookingState extends State<ListBooking> {
                                   tujuanKey: _get[index]['tujuan'],
                                   idKey: _get[index]['id'],
                                   hargaKey: _get[index]['harga'],
-                                  tanggalKey: widget.dateofJourney),
+                            tanggalKey: widget.dateofJourney,
+                          ),
                         ));
                   },
                 ),

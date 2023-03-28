@@ -22,25 +22,30 @@ class _payPageState extends State<payPage> {
         appBar: AppBar(title: Text("Pembayaran")),
         body: Container(
           padding: EdgeInsets.all(20),
-          child: Container(
-            height: 200,
-            width: double.infinity,
-            color: Colors.redAccent[50],
-            child: Center(
-                child: ElevatedButton(
-              child: Text("Open Pembayaran"),
-              onPressed: () async {
-                String url = widget.redirect_url;
-                var urllaunchable = await canLaunch(
-                    url); //canLaunch is from url_launcher package
-                if (urllaunchable) {
-                  await launch(
-                      url); //launch is from url_launcher package to launch URL
-                } else {
-                  print("URL can't be launched.");
-                }
-              },
-            )),
+          child: Column(
+            children: [
+              Text(widget.redirect_url),
+              Container(
+                height: 200,
+                width: double.infinity,
+                color: Colors.redAccent[50],
+                child: Center(
+                    child: ElevatedButton(
+                  child: Text("Bayar Sekarang"),
+                  onPressed: () async {
+                    String url = widget.redirect_url;
+                    var urllaunchable = await canLaunch(
+                        url); //canLaunch is from url_launcher package
+                    if (urllaunchable) {
+                      await launch(
+                          url); //launch is from url_launcher package to launch URL
+                    } else {
+                      print("URL can't be launched.");
+                    }
+                  },
+                )),
+              ),
+            ],
           ),
         ));
   }

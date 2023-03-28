@@ -28,11 +28,14 @@ class HttpService {
       "email": email,
       "password": password,
     });
-
+// print(response.statusCode);
     if (response.statusCode == 200) {
       var jsonUsers = jsonDecode(response.body);
+      // print(jsonUsers['user']['id']);
+      var id_user = jsonUsers['user']['id'];
       SharedPreferences pref = await SharedPreferences.getInstance();
       await pref.setString("email", email);
+      await pref.setInt("id_user", id_user);
       await pref.setBool("is_login", true);
       Navigator.pushAndRemoveUntil(
         context,
@@ -40,6 +43,7 @@ class HttpService {
           builder: (BuildContext context) => Dashboard(
             token: jsonUsers['data'],
             email: email,
+            id_user: id_user.toString(),
           ),
         ),
         (route) => false,
@@ -77,6 +81,9 @@ class HttpService {
   }
 
   static pesan(nama, email, noHp, id_persediaan_tiket, harga, context) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var id_user = prefs.getInt('id_user');
+    // print(prefs.getInt('id_user'));
     Random objectname = Random();
     int number = objectname.nextInt(10000000);
     String username = 'SB-Mid-server-z5T9WhivZDuXrJxC7w-civ_k';
@@ -94,21 +101,23 @@ class HttpService {
           "credit_card": {"secure": true}
         }));
     var jsonMidtrans = jsonDecode(responseMidtrans.body.toString());
-    print(responseMidtrans.body);
+    
     http.Response response = await _client.post(_pesanUrl, body: {
       "id_persediaan_tiket": id_persediaan_tiket,
+      "id_user": id_user.toString(),
       "nama_pemesan": nama,
       "email": email,
       "no_hp": noHp,
-      "status": "pending",
+      "status": "belum bayar",
+      "order_id": number.toString(),
       "redirect_url": jsonMidtrans['redirect_url'],
     });
-    print(response.body);
+    // print(response.body);
     if (response.statusCode == 200) {
       var json = jsonDecode(response.body.toString());
-      print(json['success'] == true);
+      // print(json['success'] == true);
       if (json['success'] == false) {
-        print(json);
+        // print(json);
         await EasyLoading.showError(json);
       } else {
         print(json);
@@ -117,7 +126,10 @@ class HttpService {
             context,
             MaterialPageRoute(
                 builder: (context) =>
-                    payPage(redirect_url: jsonMidtrans['redirect_url']
+                    Dashboard(
+                      token: "",
+                      email: "",
+                      id_user: "",
                     )));
       }
     } else {
