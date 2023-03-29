@@ -12,10 +12,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:math';
 
 class HttpService {
-  
-
-  
-
   static final _client = http.Client();
 
   static var _loginUrl = Uri.parse('https://travel.dlhcode.com/api/login');
@@ -34,20 +30,30 @@ class HttpService {
     });
     if (response.statusCode == 200) {
       var jsonUsers = jsonDecode(response.body);
-     
+
       var id_user = jsonUsers['user']['id'];
+      var nama = jsonUsers['user']['nama'];
+      var no_hp = jsonUsers['user']['no_hp'].toString();
       SharedPreferences pref = await SharedPreferences.getInstance();
       await pref.setString("email", email);
+      await pref.setString(
+        "token",
+        jsonUsers['data'],
+      );
+      await pref.setString("nama", nama);
       await pref.setInt("id_user", id_user);
+      await pref.setString("no_hp", no_hp);
       await pref.setBool("is_login", true);
-       
+
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
           builder: (BuildContext context) => Dashboard(
-            token: jsonUsers['data'],
-            email: email,
-            id_user: id_user.toString(),
+            token_: jsonUsers['data'],
+            email_: email,
+            id_user_: id_user.toString(),
+            nama_: nama.toString(),
+            no_hp_: no_hp.toString(),
           ),
         ),
         (route) => false,
@@ -58,7 +64,6 @@ class HttpService {
     }
   }
 
-
   static register(email, password, nama, noHp, role, context) async {
     http.Response response = await _client.post(_registerUrl, body: {
       "email": email,
@@ -67,15 +72,13 @@ class HttpService {
       "no_hp": noHp,
       "role_id": role,
     });
-    
+
     if (response.statusCode == 200) {
       var json = jsonDecode(response.body.toString());
-     
+
       if (json == 'username already exist') {
-       
         await EasyLoading.showError(json);
       } else {
-      
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => LoginPage()));
       }
@@ -88,14 +91,14 @@ class HttpService {
   static pesan(nama, email, noHp, id_persediaan_tiket, harga, context) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var id_user = prefs.getInt('id_user');
- 
+
     Random objectname = Random();
     int number = objectname.nextInt(10000000);
     String username = 'SB-Mid-server-z5T9WhivZDuXrJxC7w-civ_k';
     String password = '';
     String basicAuth =
         'Basic ' + base64Encode(utf8.encode('$username:$password'));
-  
+
     http.Response responseMidtrans = await _client.post(_pesanmidtransUrl,
         headers: <String, String>{
           'authorization': basicAuth,
@@ -106,7 +109,7 @@ class HttpService {
           "credit_card": {"secure": true}
         }));
     var jsonMidtrans = jsonDecode(responseMidtrans.body.toString());
-    
+
     http.Response response = await _client.post(_pesanUrl, body: {
       "id_persediaan_tiket": id_persediaan_tiket,
       "id_user": id_user.toString(),
@@ -117,29 +120,28 @@ class HttpService {
       "order_id": number.toString(),
       "redirect_url": jsonMidtrans['redirect_url'],
     });
-  
+
     if (response.statusCode == 200) {
       var json = jsonDecode(response.body.toString());
-     
-      if (json['success'] == false) {
-       
-        await EasyLoading.showError(json);
-      } else {
-        print(json);
-        // await EasyLoading.showSuccess(json.success);
-        Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-                builder: (context) =>
-                    Dashboard(
-                      token: "",
-                      email: "",
-                      id_user: "",
-                    )));
-      }
-    } else {
-      await EasyLoading.showError(
-          "Error Code : ${response.statusCode.toString()}");
+
+      print(json);
+      // await EasyLoading.showSuccess(json.success);
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var _id_user = prefs.getInt('id_user');
+      var _nama = prefs.getString('nama');
+      var _email = prefs.getString('email');
+      var _no_hp = prefs.getString('no_hp');
+      var _token = prefs.getString('token');
+      print(_email);
+      print(_nama);
+      print(_no_hp);
+      print(_token);
+      print(_id_user.toString());
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  payPage(redirect_url: jsonMidtrans['redirect_url'])));
     }
   }
 }

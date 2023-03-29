@@ -13,17 +13,20 @@ import 'package:intl/intl.dart';
 import 'package:travel/views/listBooking.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
-
 class Dashboard extends StatefulWidget {
-  const Dashboard(
-      {Key? key,
-      required this.token,
-      required this.email,
-      required this.id_user})
-      : super(key: key);
-  final String token;
-  final String email;
-  final String id_user;
+  const Dashboard({
+    Key? key,
+    required this.token_,
+    required this.email_,
+    required this.id_user_,
+    required this.nama_,
+    required this.no_hp_,
+  }) : super(key: key);
+  final String token_;
+  final String email_;
+  final String id_user_;
+  final String nama_;
+  final String no_hp_;
 
   @override
   State<Dashboard> createState() => _DashboardState();
@@ -39,7 +42,7 @@ class _DashboardState extends State<Dashboard> {
     try {
       http.Response response = await _client.get(_logoutUrl, headers: {
         "Accept": "application/json",
-        "Authorization": "Bearer " + widget.token,
+        "Authorization": "Bearer " + widget.token_,
       });
       if (response.statusCode == 200) {
         SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -66,7 +69,6 @@ class _DashboardState extends State<Dashboard> {
       String yesbutton, Function onTap, bool isValue) async {
     return showDialog<void>(
       context: context,
-      
       barrierDismissible: isValue,
       builder: (BuildContext context) {
         return AlertDialog(
@@ -111,33 +113,40 @@ class _DashboardState extends State<Dashboard> {
                         'No', 'Yes', () async {
                       Logout();
                     }, true);
-                    
+
                     child:
                     Text(
                       'Log Out',
                       style: TextStyle(color: Colors.white),
                     );
-                    
                   },
                 )
               ],
             ),
             body: Menu(
-                email: widget.email,
-                id_user: widget.id_user,
-                token: widget.token)));
+              email_: widget.email_,
+              id_user_: widget.id_user_,
+              token_: widget.token_,
+              nama_: widget.nama_,
+              no_hp_: widget.no_hp_,
+            )));
   }
 }
 
 class Menu extends StatefulWidget {
-  const Menu(
-      {super.key,
-      required this.email,
-      required this.id_user,
-      required this.token});
-  final String email;
-  final String id_user;
-  final String token;
+  const Menu({
+    super.key,
+    required this.email_,
+    required this.id_user_,
+    required this.token_,
+    required this.nama_,
+    required this.no_hp_,
+  });
+  final String email_;
+  final String id_user_;
+  final String token_;
+  final String nama_;
+  final String no_hp_;
   @override
   State<Menu> createState() => _MenuState();
 }
@@ -157,6 +166,12 @@ class _MenuState extends State<Menu> {
   int _selectedIndex = 0;
   var fromAgentValue;
   List fromAgent = [];
+  List _get = [];
+  static final _client = http.Client();
+  var asal;
+  var tujuan;
+
+  //Future
   Future getagentFrom() async {
     var baseUrl = "https://travel.dlhcode.com/api/tempat_agen";
     http.Response response = await http.get(Uri.parse(baseUrl));
@@ -181,18 +196,13 @@ class _MenuState extends State<Menu> {
     }
   }
 
-  List _get = [];
- 
-  static final _client = http.Client();
-  var asal;
-  var tujuan;
   Future riwayatTiket() async {
     try {
       var _riwayatTiket =
           Uri.parse('https://travel.dlhcode.com/api/riwayat_tiket');
       http.Response response = await _client.post(_riwayatTiket, body: {
-        "email": widget.email,
-        "id_user": widget.id_user,
+        "email": widget.email_,
+        "id_user": widget.id_user_,
       });
 
       if (response.statusCode == 200) {
@@ -206,52 +216,6 @@ class _MenuState extends State<Menu> {
       print(e);
     }
   }
-  var _dataProfile;
-  var datanama;
-  profile() async {
-    try {
-      var _profile = Uri.parse('https://travel.dlhcode.com/api/profile');
-      http.Response response = await _client.post(_profile, headers: {
-        'Accept': 'application/json',
-        "Authorization": "Bearer " + widget.token,
-      }, body: {
-        "email": widget.email,
-      });
-      // print(response.statusCode);
-      if (response.statusCode == 200) {
-        final dataProfile = jsonDecode(response.body.toString());
-
-        setState(() {
-          _dataProfile = dataProfile['data'];
-          var dataNama = _dataProfile['nama'].toString();
-          print(dataNama);
-        });
-      }
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  // String? _nama;
-  // String? _email;
-  // String? _no_hp;
-
-  // String? get nama => _nama;
-  // set nama(String? nama) => _nama = nama;
-  // String? get email => _email;
-  // set email(String? email) => _email = email;
-
-  // String? get no_hp => _no_hp;
-  // set no_hp(String? no_hp) => _no_hp = no_hp;
-  // Map<String, dynamic> toJson() {
-  //   final Map<String, dynamic> _dataProfile = new Map<String, dynamic>();
-  //   _dataProfile['nama'] = this.nama;
-  //   _dataProfile['email'] = this._email;
-  //   _dataProfile['no_hp'] = this._no_hp;
-  //   return _dataProfile;
-
-  // }
-  
 
   void _onItemTapped(int index) {
     setState(() {
@@ -259,7 +223,6 @@ class _MenuState extends State<Menu> {
       getagentFrom();
       getagentTo();
       riwayatTiket();
-      profile();
     });
   }
 
@@ -273,7 +236,6 @@ class _MenuState extends State<Menu> {
     getagentFrom();
     getagentTo();
     riwayatTiket();
-    profile();
   }
 
   var profilePhoto = "http://cdn.onlinewebfonts.com/svg/img_299586.png";
@@ -281,12 +243,8 @@ class _MenuState extends State<Menu> {
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
   @override
-
-  
   Widget build(BuildContext context) {
-    
     final List<Widget> _widgetOptions = <Widget>[
-      
       Container(
         child: SafeArea(
           child: Material(
@@ -298,7 +256,6 @@ class _MenuState extends State<Menu> {
                   SizedBox(
                     height: 10.0,
                   ),
-                  //------Textformfiled code-------------
                   Padding(
                     padding: const EdgeInsets.symmetric(
                         vertical: 16.0, horizontal: 32.0),
@@ -441,7 +398,7 @@ class _MenuState extends State<Menu> {
                                             fromAgentValue: fromAgentValue,
                                             toAgentValue: toAgentValue,
                                             dateofJourney: dateofJourney.text,
-                                            email: widget.email),
+                                            email: widget.email_),
                                   ));
                             }
                           },
@@ -497,9 +454,7 @@ class _MenuState extends State<Menu> {
                   _get[index]['status'] +
                       " | "
                           "Tgl " +
-                      _get[index]['created_at']
-                          .toString()
-                          .substring(0, 10),
+                      _get[index]['created_at'].toString().substring(0, 10),
                   maxLines: 2,
                   style: new TextStyle(fontSize: 18.0),
                   overflow: TextOverflow.ellipsis,
@@ -526,7 +481,7 @@ class _MenuState extends State<Menu> {
                 // backgroundImage: Colors.black,
               ),
               Text(
-                "_dataProfile['nama']",
+                widget.nama_,
                 style: TextStyle(
                   fontSize: 40.0,
                   color: Color.fromARGB(255, 0, 0, 0),
@@ -534,7 +489,7 @@ class _MenuState extends State<Menu> {
                   fontFamily: "Pacifico",
                 ),
               ),
-              
+
               SizedBox(
                 height: 20,
                 width: 200,
@@ -555,7 +510,7 @@ class _MenuState extends State<Menu> {
                       color: Color.fromARGB(255, 0, 0, 0),
                     ),
                     title: Text(
-                      "_dataProfile['email']",
+                      widget.email_,
                       style: TextStyle(
                           color: Color.fromARGB(255, 0, 0, 0),
                           fontSize: 20,
@@ -574,7 +529,7 @@ class _MenuState extends State<Menu> {
                       color: Color.fromARGB(255, 0, 0, 0),
                     ),
                     title: Text(
-                      "_dataProfile['no_hp']",
+                      widget.no_hp_,
                       style: TextStyle(
                           color: Color.fromARGB(255, 0, 0, 0),
                           fontSize: 20,
@@ -587,10 +542,8 @@ class _MenuState extends State<Menu> {
           ),
         )
       ]),
-        
-        
     ];
-    
+
     return Scaffold(
       body: Center(
         child: _widgetOptions.elementAt(
@@ -619,4 +572,3 @@ class _MenuState extends State<Menu> {
     );
   }
 }
-
