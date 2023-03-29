@@ -1,4 +1,8 @@
+import 'dart:developer';
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:travel/views/paypage.dart';
 import 'dart:convert';
@@ -8,6 +12,7 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:travel/views/listBooking.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+
 
 class Dashboard extends StatefulWidget {
   const Dashboard(
@@ -61,6 +66,7 @@ class _DashboardState extends State<Dashboard> {
       String yesbutton, Function onTap, bool isValue) async {
     return showDialog<void>(
       context: context,
+      
       barrierDismissible: isValue,
       builder: (BuildContext context) {
         return AlertDialog(
@@ -104,7 +110,7 @@ class _DashboardState extends State<Dashboard> {
                     _showMyDialog('Log Out', 'Are you sure you want to logout?',
                         'No', 'Yes', () async {
                       Logout();
-                    }, false);
+                    }, true);
                     
                     child:
                     Text(
@@ -116,14 +122,22 @@ class _DashboardState extends State<Dashboard> {
                 )
               ],
             ),
-            body: Menu(email: widget.email, id_user: widget.id_user)));
+            body: Menu(
+                email: widget.email,
+                id_user: widget.id_user,
+                token: widget.token)));
   }
 }
 
 class Menu extends StatefulWidget {
-  const Menu({super.key, required this.email, required this.id_user});
+  const Menu(
+      {super.key,
+      required this.email,
+      required this.id_user,
+      required this.token});
   final String email;
   final String id_user;
+  final String token;
   @override
   State<Menu> createState() => _MenuState();
 }
@@ -168,10 +182,11 @@ class _MenuState extends State<Menu> {
   }
 
   List _get = [];
+ 
   static final _client = http.Client();
   var asal;
   var tujuan;
-  Future search() async {
+  Future riwayatTiket() async {
     try {
       var _riwayatTiket =
           Uri.parse('https://travel.dlhcode.com/api/riwayat_tiket');
@@ -182,7 +197,7 @@ class _MenuState extends State<Menu> {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        print(data);
+        // print(data);
         setState(() {
           _get = data['data'];
         });
@@ -191,26 +206,74 @@ class _MenuState extends State<Menu> {
       print(e);
     }
   }
+  var _dataProfile;
+  var datanama;
+  profile() async {
+    try {
+      var _profile = Uri.parse('https://travel.dlhcode.com/api/profile');
+      http.Response response = await _client.post(_profile, headers: {
+        'Accept': 'application/json',
+        "Authorization": "Bearer " + widget.token,
+      }, body: {
+        "email": widget.email,
+      });
+      // print(response.statusCode);
+      if (response.statusCode == 200) {
+        final dataProfile = jsonDecode(response.body.toString());
+
+        setState(() {
+          _dataProfile = dataProfile['data'];
+          var dataNama = _dataProfile['nama'].toString();
+          print(dataNama);
+        });
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  // String? _nama;
+  // String? _email;
+  // String? _no_hp;
+
+  // String? get nama => _nama;
+  // set nama(String? nama) => _nama = nama;
+  // String? get email => _email;
+  // set email(String? email) => _email = email;
+
+  // String? get no_hp => _no_hp;
+  // set no_hp(String? no_hp) => _no_hp = no_hp;
+  // Map<String, dynamic> toJson() {
+  //   final Map<String, dynamic> _dataProfile = new Map<String, dynamic>();
+  //   _dataProfile['nama'] = this.nama;
+  //   _dataProfile['email'] = this._email;
+  //   _dataProfile['no_hp'] = this._no_hp;
+  //   return _dataProfile;
+
+  // }
+  
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
       getagentFrom();
       getagentTo();
-      search();
+      riwayatTiket();
+      profile();
     });
   }
 
   Future refresh() async {
     setState(() {
-      search();
+      riwayatTiket();
     });
   }
 
   void initState() {
     getagentFrom();
     getagentTo();
-    search();
+    riwayatTiket();
+    profile();
   }
 
   var profilePhoto = "http://cdn.onlinewebfonts.com/svg/img_299586.png";
@@ -218,8 +281,12 @@ class _MenuState extends State<Menu> {
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
   @override
+
+  
   Widget build(BuildContext context) {
+    
     final List<Widget> _widgetOptions = <Widget>[
+      
       Container(
         child: SafeArea(
           child: Material(
@@ -430,7 +497,7 @@ class _MenuState extends State<Menu> {
                   _get[index]['status'] +
                       " | "
                           "Tgl " +
-                      _get[index]['tgl_keberangkatan']
+                      _get[index]['created_at']
                           .toString()
                           .substring(0, 10),
                   maxLines: 2,
@@ -449,83 +516,81 @@ class _MenuState extends State<Menu> {
           ),
         ),
       ),
-      Container(
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: 10),
-              Card(
-                margin: EdgeInsets.all(8),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                child: Center(
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Image.network(profilePhoto,
-                        width: 140, height: 140, fit: BoxFit.fill),
+      Column(children: [
+        SafeArea(
+          minimum: const EdgeInsets.only(top: 100),
+          child: Column(
+            children: <Widget>[
+              CircleAvatar(
+                radius: 50,
+                // backgroundImage: Colors.black,
+              ),
+              Text(
+                "_dataProfile['nama']",
+                style: TextStyle(
+                  fontSize: 40.0,
+                  color: Color.fromARGB(255, 0, 0, 0),
+                  fontWeight: FontWeight.bold,
+                  fontFamily: "Pacifico",
+                ),
+              ),
+              
+              SizedBox(
+                height: 20,
+                width: 200,
+                child: Divider(
+                  color: Colors.white,
+                ),
+              ),
+
+              // we will be creating a new widget name info carrd
+
+              GestureDetector(
+                child: Card(
+                  color: Colors.white,
+                  margin: EdgeInsets.symmetric(vertical: 10, horizontal: 25),
+                  child: ListTile(
+                    leading: Icon(
+                      Icons.email,
+                      color: Color.fromARGB(255, 0, 0, 0),
+                    ),
+                    title: Text(
+                      "_dataProfile['email']",
+                      style: TextStyle(
+                          color: Color.fromARGB(255, 0, 0, 0),
+                          fontSize: 20,
+                          fontFamily: "Source Sans Pro"),
+                    ),
                   ),
                 ),
               ),
-              // Center(
-              //   child: Text(
-              //     widget.email,
-              //     style: TextStyle(color: Colors.grey.shade800),
-              //   ),
-              // ),
-              SizedBox(
-                height: 20,
-              ),
-              Card(
-                  margin: EdgeInsets.all(8),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          const Text('Nama: ',
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold)),
-                          Text("",
-                              style: const TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.w400)),
-                        ],
-                      ),
-                      const SizedBox(height: 25),
-                      Row(children: [
-                        const Text('Umur: ',
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold)),
-                        Text("",
-                            style: const TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.w400))
-                      ]),
-                      const SizedBox(height: 25),
-                      Row(children: [
-                        const Text(
-                            ''
-                            'Jenis Kelamin: ',
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold)),
-                        Text("",
-                            style: const TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.w400))
-                      ]),
-                      const SizedBox(height: 25),
-                      Row(children: [
-                        const Text('Nomor: ',
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold)),
-                        Text("",
-                            style: const TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.w400))
-                      ]),
-                    ],
-                  ))
-            ]),
-      ),
+              GestureDetector(
+                child: Card(
+                  color: Colors.white,
+                  margin: EdgeInsets.symmetric(vertical: 10, horizontal: 25),
+                  child: ListTile(
+                    leading: Icon(
+                      Icons.call,
+                      color: Color.fromARGB(255, 0, 0, 0),
+                    ),
+                    title: Text(
+                      "_dataProfile['no_hp']",
+                      style: TextStyle(
+                          color: Color.fromARGB(255, 0, 0, 0),
+                          fontSize: 20,
+                          fontFamily: "Source Sans Pro"),
+                    ),
+                  ),
+                ),
+              )
+            ],
+          ),
+        )
+      ]),
+        
+        
     ];
+    
     return Scaffold(
       body: Center(
         child: _widgetOptions.elementAt(
@@ -554,3 +619,4 @@ class _MenuState extends State<Menu> {
     );
   }
 }
+

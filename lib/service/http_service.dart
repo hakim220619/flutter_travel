@@ -12,6 +12,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:math';
 
 class HttpService {
+  
+
+  
+
   static final _client = http.Client();
 
   static var _loginUrl = Uri.parse('https://travel.dlhcode.com/api/login');
@@ -36,6 +40,7 @@ class HttpService {
       await pref.setString("email", email);
       await pref.setInt("id_user", id_user);
       await pref.setBool("is_login", true);
+       
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
@@ -52,6 +57,7 @@ class HttpService {
           "Error Code : ${response.statusCode.toString()}");
     }
   }
+
 
   static register(email, password, nama, noHp, role, context) async {
     http.Response response = await _client.post(_registerUrl, body: {

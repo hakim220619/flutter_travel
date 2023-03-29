@@ -4,6 +4,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:travel/views/bookingPage.dart';
 import 'package:travel/views/register.dart';
+import 'package:cool_alert/cool_alert.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -20,6 +21,7 @@ class _LoginPageState extends State<LoginPage> {
       IconData(0xe1d7, fontFamily: 'MaterialIcons');
   @override
   Widget build(BuildContext context) {
+    
     return Form(
       key: _formKey,
       child: Column(
@@ -94,8 +96,21 @@ class _LoginPageState extends State<LoginPage> {
               if (_formKey.currentState!.validate()) {
                 // print(password);
                 // print(email);
+                
+                
+              
+                // CoolAlert.show(
+                //   context: context,
+                //   type: CoolAlertType.success,
+                //   text: 'Transaction completed successfully!',
+                //   autoCloseDuration: const Duration(seconds: 2),
+
+                // );
                 HttpService.login(email, password, context);
+                
+      
               }
+              
             },
             style: ElevatedButton.styleFrom(
               padding: const EdgeInsets.fromLTRB(40, 15, 40, 15),
@@ -149,3 +164,4 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
+
