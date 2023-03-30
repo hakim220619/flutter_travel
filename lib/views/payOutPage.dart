@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:travel/views/dashboard.dart';
+import 'package:travel/views/login.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 // import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
-class payPage extends StatefulWidget {
-  const payPage({
+class payOutPage extends StatefulWidget {
+  const payOutPage({
     Key? key,
     required this.nama,
     required this.email,
@@ -22,12 +23,10 @@ class payPage extends StatefulWidget {
   final String redirect_url;
 
   @override
-  State<payPage> createState() => _payPageState();
+  State<payOutPage> createState() => _payOutPageState();
 }
 
-
-
-class _payPageState extends State<payPage> {
+class _payOutPageState extends State<payOutPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,22 +34,10 @@ class _payPageState extends State<payPage> {
           title: Text("Pembayaran"),
           leading: InkWell(
             onTap: () async {
-              SharedPreferences prefs = await SharedPreferences.getInstance();
-              var id_user_ = prefs.getInt('id_user');
-              var nama_ = prefs.getString('nama');
-              var email_ = prefs.getString('email');
-              var no_hp_ = prefs.getString('no_hp');
-              var token_ = prefs.getString('token');
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (BuildContext context) => Dashboard(
-                    token_: token_.toString(),
-                    email_: email_.toString(),
-                    id_user_: id_user_.toString(),
-                    nama_: nama_.toString(),
-                    no_hp_: no_hp_.toString(),
-                  ),
+                  builder: (BuildContext context) => LoginPage(),
                 ),
               );
             },
@@ -60,7 +47,6 @@ class _payPageState extends State<payPage> {
             ),
           ),
         ),
-        
         body: Container(
           padding: EdgeInsets.all(20),
           child: Column(
@@ -141,9 +127,6 @@ class _payPageState extends State<payPage> {
                   ),
                 ),
               ),
-              
-              
-              
               Container(
                 height: 100,
                 width: double.infinity,

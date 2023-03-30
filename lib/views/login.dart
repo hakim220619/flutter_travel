@@ -21,16 +21,14 @@ class _LoginPageState extends State<LoginPage> {
       IconData(0xe1d7, fontFamily: 'MaterialIcons');
   @override
   Widget build(BuildContext context) {
-    
     return Form(
       key: _formKey,
       child: Column(
         children: [
           const SizedBox(
-            height: 100,
+            height: 200,
           ),
           Container(
-            alignment: Alignment.center,
             padding: const EdgeInsets.all(10),
             child: Center(
                 child: Icon(
@@ -51,7 +49,7 @@ class _LoginPageState extends State<LoginPage> {
               maxLines: 1,
               decoration: InputDecoration(
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(90.0),
+                    borderRadius: BorderRadius.circular(10.0),
                   ),
                   prefixIcon: const Icon(Icons.email),
                   labelText: 'Masukan Email',
@@ -76,7 +74,7 @@ class _LoginPageState extends State<LoginPage> {
               obscureText: true,
               decoration: InputDecoration(
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(90.0),
+                    borderRadius: BorderRadius.circular(10.0),
                   ),
                   prefixIcon: const Icon(Icons.lock),
                   labelText: 'Masukan Password',
@@ -94,26 +92,11 @@ class _LoginPageState extends State<LoginPage> {
           ElevatedButton(
             onPressed: () {
               if (_formKey.currentState!.validate()) {
-                // print(password);
-                // print(email);
-                
-                
-              
-                // CoolAlert.show(
-                //   context: context,
-                //   type: CoolAlertType.success,
-                //   text: 'Transaction completed successfully!',
-                //   autoCloseDuration: const Duration(seconds: 2),
-
-                // );
                 HttpService.login(email, password, context);
-                
-      
               }
-              
             },
             style: ElevatedButton.styleFrom(
-              padding: const EdgeInsets.fromLTRB(40, 15, 40, 15),
+              padding: const EdgeInsets.fromLTRB(150, 15, 150, 15),
             ),
             child: const Text(
               'Masuk',
@@ -123,40 +106,66 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ),
           const SizedBox(
-            height: 20,
+            height: 190,
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+          Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              const Text('Belum Punya Akun?'),
-              TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const RegisterPage(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(
+                          Color.fromARGB(255, 13, 219, 6)),
                     ),
-                  );
-                },
-                child: const Text('Registrasi'),
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text('Mau Langsung Pesan Tiket?'),
-              TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const Add(),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const RegisterPage(),
+                        ),
+                      );
+                    },
+                    child: const Text(
+                      'Registrasi',
+                      style: TextStyle(),
                     ),
-                  );
-                },
-                child: const Text('Pesan Tiket'),
+                  ),
+                  ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(
+                          Color.fromARGB(255, 12, 12, 7)),
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const Add(),
+                        ),
+                      );
+                    },
+                    child: const Text('Cetak Tiket'),
+                  ),
+                  ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(
+                          Color.fromARGB(255, 231, 3, 3)),
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const Add(),
+                        ),
+                      );
+                    },
+                    child: const Text('Pesan Tiket'),
+                  ),
+                ],
               ),
+              
             ],
           ),
         ],
@@ -164,4 +173,3 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
-

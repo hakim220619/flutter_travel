@@ -6,6 +6,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:travel/views/dashboard.dart';
 import 'package:travel/views/listBooking.dart';
 import 'package:travel/views/login.dart';
+import 'package:travel/views/payOutPage.dart';
 import 'package:travel/views/paypage.dart';
 import 'package:travel/views/welcome.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -124,24 +125,63 @@ class HttpService {
     if (response.statusCode == 200) {
       var json = jsonDecode(response.body.toString());
 
-      print(json);
-      // await EasyLoading.showSuccess(json.success);
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      var _id_user = prefs.getInt('id_user');
-      var _nama = prefs.getString('nama');
-      var _email = prefs.getString('email');
-      var _no_hp = prefs.getString('no_hp');
-      var _token = prefs.getString('token');
-      print(_email);
-      print(_nama);
-      print(_no_hp);
-      print(_token);
-      print(_id_user.toString());
+      
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => payPage(
+                  nama: nama,
+                  email: email,
+                  no_hp: noHp,
+                  status: "belum bayar",
+                  redirect_url: jsonMidtrans['redirect_url'])));
+    }
+  }
+
+  static pesanOut(
+      nama, email, noHp, id_persediaan_tiket, harga, context) async {
+    Random objectname = Random();
+    int number = objectname.nextInt(10000000);
+    String username = 'SB-Mid-server-z5T9WhivZDuXrJxC7w-civ_k';
+    String password = '';
+    String basicAuth =
+        'Basic ' + base64Encode(utf8.encode('$username:$password'));
+
+    http.Response responseMidtrans = await _client.post(_pesanmidtransUrl,
+        headers: <String, String>{
+          'authorization': basicAuth,
+          'Content-Type': 'application/json'
+        },
+        body: jsonEncode({
+          'transaction_details': {'order_id': number, 'gross_amount': harga},
+          "credit_card": {"secure": true}
+        }));
+    var jsonMidtrans = jsonDecode(responseMidtrans.body.toString());
+
+    http.Response response = await _client.post(_pesanUrl, body: {
+      "id_persediaan_tiket": id_persediaan_tiket,
+      "nama_pemesan": nama,
+      "email": email,
+      "no_hp": noHp,
+      "status": "belum bayar",
+      "order_id": number.toString(),
+      "redirect_url": jsonMidtrans['redirect_url'],
+    });
+
+    if (response.statusCode == 200) {
+      var json = jsonDecode(response.body.toString());
+
+      
       Navigator.push(
           context,
           MaterialPageRoute(
               builder: (context) =>
-                  payPage(redirect_url: jsonMidtrans['redirect_url'])));
+                  payOutPage(
+                  nama: nama,
+                  email: email,
+                  no_hp: noHp,
+                  status: "belum bayar",
+                  redirect_url: jsonMidtrans['redirect_url'])));
     }
   }
 }

@@ -8,6 +8,7 @@ import 'dart:convert';
 import 'dart:async';
 import 'package:travel/service/http_service.dart';
 import 'package:travel/views/listBooking.dart';
+import 'package:travel/views/listOutPage.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class Add extends StatefulWidget {
@@ -71,7 +72,6 @@ class _AddState extends State<Add> {
     super.initState();
     getagentFrom();
     getagentTo();
-    
   }
 
   Widget build(BuildContext context) {
@@ -244,23 +244,22 @@ class _AddState extends State<Add> {
                                     if (_formkey.currentState!.validate()) {
                                       // await ListBooking(fromAgentValue, toAgentValue,
                                       //     dateofJourney.text, context);
-                                      Future.delayed(Duration(seconds: 5), () {
+                                      
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
                                             builder: (
                                               context,
                                             ) =>
-                                                ListBooking(
-                                                    fromAgentValue:
-                                                        fromAgentValue,
-                                                    toAgentValue: toAgentValue,
-                                                    dateofJourney:
+                                                ListOutPage(
+                                              fromAgentValue: fromAgentValue,
+                                              toAgentValue: toAgentValue,
+                                              dateofJourney:
                                                     dateofJourney.text,
                                                 email: "",
                                               ),
                                           ));
-                                      });
+                                      
                                     }
                                   },
                                   child: AnimatedContainer(

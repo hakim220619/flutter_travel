@@ -50,6 +50,10 @@ class _DashboardState extends State<Dashboard> {
           preferences.remove("is_login");
           preferences.remove("id_user");
           preferences.remove("email");
+          preferences.remove("nama");
+          preferences.remove("no_hp");
+          preferences.remove("token");
+          preferences.remove("id_user");
         });
 
         Navigator.pushAndRemoveUntil(
@@ -65,39 +69,39 @@ class _DashboardState extends State<Dashboard> {
     }
   }
 
-  Future<void> _showMyDialog(String title, String text, String nobutton,
-      String yesbutton, Function onTap, bool isValue) async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: isValue,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(title),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Text(text),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text(nobutton),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: Text(yesbutton),
-              onPressed: () async {
-                onTap();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
+  // Future<void> _showMyDialog(String title, String text, String nobutton,
+  //     String yesbutton, Function onTap, bool isValue) async {
+  //   return showDialog<void>(
+  //     context: context,
+  //     barrierDismissible: isValue,
+  //     builder: (BuildContext context) {
+  //       return AlertDialog(
+  //         title: Text(title),
+  //         content: SingleChildScrollView(
+  //           child: ListBody(
+  //             children: <Widget>[
+  //               Text(text),
+  //             ],
+  //           ),
+  //         ),
+  //         actions: <Widget>[
+  //           TextButton(
+  //             child: Text(nobutton),
+  //             onPressed: () {
+  //               Logout();
+  //             },
+  //           ),
+  //           TextButton(
+  //             child: Text(yesbutton),
+  //             onPressed: () async {
+  //               onTap();
+  //             },
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
 
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -109,11 +113,11 @@ class _DashboardState extends State<Dashboard> {
                 IconButton(
                   icon: Icon(Icons.power_settings_new),
                   onPressed: () {
-                    _showMyDialog('Log Out', 'Are you sure you want to logout?',
-                        'No', 'Yes', () async {
-                      Logout();
-                    }, true);
-
+                    // _showMyDialog('Log Out', 'Are you sure you want to logout?',
+                    //     'No', 'Yes', () async {
+                    //   Logout();
+                    // }, false);
+                    Logout();
                     child:
                     Text(
                       'Log Out',
@@ -147,9 +151,12 @@ class Menu extends StatefulWidget {
   final String token_;
   final String nama_;
   final String no_hp_;
+  
   @override
   State<Menu> createState() => _MenuState();
 }
+
+
 
 final _formkey = GlobalKey<FormState>();
 String? onclick;
@@ -210,6 +217,7 @@ class _MenuState extends State<Menu> {
         // print(data);
         setState(() {
           _get = data['data'];
+          print(_get);
         });
       }
     } catch (e) {
@@ -217,12 +225,15 @@ class _MenuState extends State<Menu> {
     }
   }
 
+  
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
       getagentFrom();
       getagentTo();
       riwayatTiket();
+   
     });
   }
 
@@ -231,11 +242,14 @@ class _MenuState extends State<Menu> {
       riwayatTiket();
     });
   }
+ 
 
   void initState() {
+    
     getagentFrom();
     getagentTo();
     riwayatTiket();
+ 
   }
 
   var profilePhoto = "http://cdn.onlinewebfonts.com/svg/img_299586.png";
@@ -464,7 +478,12 @@ class _MenuState extends State<Menu> {
                       context,
                       MaterialPageRoute(
                           builder: (context) => payPage(
-                              redirect_url: _get[index]['redirect_url'])));
+                              nama: _get[index]['nama_pemesan'].toString(),
+                              email: _get[index]['email'].toString(),
+                              no_hp: _get[index]['no_hp'].toString(),
+                              status: _get[index]['status'].toString(),
+                              redirect_url:
+                                  _get[index]['redirect_url'].toString())));
                 },
               ),
             ),
