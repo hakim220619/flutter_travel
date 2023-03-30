@@ -65,15 +65,14 @@ class HttpService {
     }
   }
 
-  static register(email, password, nama, noHp, role, context) async {
+  static register(email, password, nama, noHp, context) async {
     http.Response response = await _client.post(_registerUrl, body: {
       "email": email,
       "password": password,
       "nama": nama,
       "no_hp": noHp,
-      "role_id": role,
     });
-
+    print(response.body);
     if (response.statusCode == 200) {
       var json = jsonDecode(response.body.toString());
 
@@ -110,7 +109,7 @@ class HttpService {
           "credit_card": {"secure": true}
         }));
     var jsonMidtrans = jsonDecode(responseMidtrans.body.toString());
-
+    
     http.Response response = await _client.post(_pesanUrl, body: {
       "id_persediaan_tiket": id_persediaan_tiket,
       "id_user": id_user.toString(),
@@ -121,11 +120,10 @@ class HttpService {
       "order_id": number.toString(),
       "redirect_url": jsonMidtrans['redirect_url'],
     });
-
+print(response.body);
     if (response.statusCode == 200) {
       var json = jsonDecode(response.body.toString());
 
-      
       Navigator.push(
           context,
           MaterialPageRoute(
@@ -171,12 +169,10 @@ class HttpService {
     if (response.statusCode == 200) {
       var json = jsonDecode(response.body.toString());
 
-      
       Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) =>
-                  payOutPage(
+              builder: (context) => payOutPage(
                   nama: nama,
                   email: email,
                   no_hp: noHp,

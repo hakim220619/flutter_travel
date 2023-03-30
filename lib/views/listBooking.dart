@@ -37,13 +37,13 @@ class _ListBookingState extends State<ListBooking> {
         "tujuan": widget.toAgentValue,
         "tgl_keberangkatan": widget.dateofJourney,
       });
-
+// print(response.reasonPhrase);
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
 
         setState(() {
           _get = data['data'];
-          // print(_get);
+          print(_get.first['kuota'] == '1');
         });
       }
     } catch (e) {
@@ -69,22 +69,22 @@ class _ListBookingState extends State<ListBooking> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-          appBar: AppBar(
-            title: Text(
-              "List Travel",
-              style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
-            ),
-            centerTitle: true,
-            leading: InkWell(
-              onTap: () {
-                Navigator.pop(context);
-              },
-              child: Icon(
-                Icons.arrow_back_ios,
-                color: Color.fromARGB(253, 255, 252, 252),
-              ),
+        appBar: AppBar(
+          title: Text(
+            "List Travel",
+            style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
+          ),
+          centerTitle: true,
+          leading: InkWell(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Icon(
+              Icons.arrow_back_ios,
+              color: Color.fromARGB(253, 255, 252, 252),
             ),
           ),
+        ),
         body: Center(
           child: RefreshIndicator(
             onRefresh: refresh,
@@ -110,22 +110,38 @@ class _ListBookingState extends State<ListBooking> {
                     style: new TextStyle(fontSize: 18.0),
                     overflow: TextOverflow.ellipsis,
                   ),
-                  
                   onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (
-                            context,
-                          ) =>
-                              PesanPage(
-                                  asalKey: _get[index]['asal'],
-                                  tujuanKey: _get[index]['tujuan'],
-                                  idKey: _get[index]['id'],
-                                  hargaKey: _get[index]['harga'],
-                            tanggalKey: widget.dateofJourney,
-                          ),
-                        ));
+                    // print(_get.first['kuota']);
+                    if (_get.first['kuota'] != '0') {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (
+                              context,
+                            ) =>
+                                PesanPage(
+                              asalKey: _get[index]['asal'],
+                              tujuanKey: _get[index]['tujuan'],
+                              idKey: _get[index]['id'],
+                              hargaKey: _get[index]['harga'],
+                              tanggalKey: widget.dateofJourney,
+                            ),
+                          ));
+                    } else {
+                      showDialog<String>(
+                        context: context,
+                        builder: (BuildContext context) => AlertDialog(
+                          title: const Text('Warning!!'),
+                          content: const Text('kuota untuk Tujuan ini Habis'),
+                          actions: <Widget>[
+                            TextButton(
+                              onPressed: () => Navigator.pop(context, 'OK'),
+                              child: const Text('OK'),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
                   },
                 ),
               ),
@@ -134,6 +150,5 @@ class _ListBookingState extends State<ListBooking> {
         ),
       ),
     );
-    
   }
 }
