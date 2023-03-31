@@ -49,13 +49,7 @@ class HttpService {
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
-          builder: (BuildContext context) => Dashboard(
-            token_: jsonUsers['data'],
-            email_: email,
-            id_user_: id_user.toString(),
-            nama_: nama.toString(),
-            no_hp_: no_hp.toString(),
-          ),
+          builder: (BuildContext context) => Dashboard(),
         ),
         (route) => false,
       );
@@ -109,7 +103,7 @@ class HttpService {
           "credit_card": {"secure": true}
         }));
     var jsonMidtrans = jsonDecode(responseMidtrans.body.toString());
-    
+
     http.Response response = await _client.post(_pesanUrl, body: {
       "id_persediaan_tiket": id_persediaan_tiket,
       "id_user": id_user.toString(),
@@ -120,7 +114,7 @@ class HttpService {
       "order_id": number.toString(),
       "redirect_url": jsonMidtrans['redirect_url'],
     });
-print(response.body);
+// print(response.body);
     if (response.statusCode == 200) {
       var json = jsonDecode(response.body.toString());
 

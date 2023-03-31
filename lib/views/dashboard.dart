@@ -16,17 +16,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 class Dashboard extends StatefulWidget {
   const Dashboard({
     Key? key,
-    required this.token_,
-    required this.email_,
-    required this.id_user_,
-    required this.nama_,
-    required this.no_hp_,
   }) : super(key: key);
-  final String token_;
-  final String email_;
-  final String id_user_;
-  final String nama_;
-  final String no_hp_;
 
   @override
   State<Dashboard> createState() => _DashboardState();
@@ -40,9 +30,11 @@ class _DashboardState extends State<Dashboard> {
 
   Future Logout() async {
     try {
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      var token = preferences.getString('token');
       http.Response response = await _client.get(_logoutUrl, headers: {
         "Accept": "application/json",
-        "Authorization": "Bearer " + widget.token_,
+        "Authorization": "Bearer " + token.toString(),
       });
       if (response.statusCode == 200) {
         SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -127,36 +119,18 @@ class _DashboardState extends State<Dashboard> {
                 )
               ],
             ),
-            body: Menu(
-              email_: widget.email_,
-              id_user_: widget.id_user_,
-              token_: widget.token_,
-              nama_: widget.nama_,
-              no_hp_: widget.no_hp_,
-            )));
+            body: Menu()));
   }
 }
 
 class Menu extends StatefulWidget {
   const Menu({
-    super.key,
-    required this.email_,
-    required this.id_user_,
-    required this.token_,
-    required this.nama_,
-    required this.no_hp_,
-  });
-  final String email_;
-  final String id_user_;
-  final String token_;
-  final String nama_;
-  final String no_hp_;
-  
+    Key? key,
+  }) : super(key: key);
+
   @override
   State<Menu> createState() => _MenuState();
 }
-
-
 
 final _formkey = GlobalKey<FormState>();
 String? onclick;
@@ -205,11 +179,15 @@ class _MenuState extends State<Menu> {
 
   Future riwayatTiket() async {
     try {
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      var email = preferences.getString('email');
+      var id_user = preferences.getInt('id_user');
+
       var _riwayatTiket =
           Uri.parse('https://travel.dlhcode.com/api/riwayat_tiket');
       http.Response response = await _client.post(_riwayatTiket, body: {
-        "email": widget.email_,
-        "id_user": widget.id_user_,
+        "email": email,
+        "id_user": id_user,
       });
 
       if (response.statusCode == 200) {
@@ -217,6 +195,7 @@ class _MenuState extends State<Menu> {
         // print(data);
         setState(() {
           _get = data['data'];
+
           print(_get);
         });
       }
@@ -225,15 +204,12 @@ class _MenuState extends State<Menu> {
     }
   }
 
-  
-
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
       getagentFrom();
       getagentTo();
       riwayatTiket();
-   
     });
   }
 
@@ -242,14 +218,11 @@ class _MenuState extends State<Menu> {
       riwayatTiket();
     });
   }
- 
 
   void initState() {
-    
     getagentFrom();
     getagentTo();
     riwayatTiket();
- 
   }
 
   var profilePhoto = "http://cdn.onlinewebfonts.com/svg/img_299586.png";
@@ -396,6 +369,10 @@ class _MenuState extends State<Menu> {
                         //-----------Login Button code---------------
                         InkWell(
                           onTap: () async {
+                            SharedPreferences preferences =
+                                await SharedPreferences.getInstance();
+                            var email = preferences.getString('email');
+                            var id_user = preferences.getInt('id_user');
                             setState(() {
                               changebutton = true;
                             });
@@ -412,7 +389,7 @@ class _MenuState extends State<Menu> {
                                             fromAgentValue: fromAgentValue,
                                             toAgentValue: toAgentValue,
                                             dateofJourney: dateofJourney.text,
-                                            email: widget.email_),
+                                            email: email.toString()),
                                   ));
                             }
                           },
@@ -500,7 +477,7 @@ class _MenuState extends State<Menu> {
                 // backgroundImage: Colors.black,
               ),
               Text(
-                widget.nama_,
+                "",
                 style: TextStyle(
                   fontSize: 40.0,
                   color: Color.fromARGB(255, 0, 0, 0),
@@ -529,7 +506,7 @@ class _MenuState extends State<Menu> {
                       color: Color.fromARGB(255, 0, 0, 0),
                     ),
                     title: Text(
-                      widget.email_,
+                      "",
                       style: TextStyle(
                           color: Color.fromARGB(255, 0, 0, 0),
                           fontSize: 20,
@@ -548,7 +525,7 @@ class _MenuState extends State<Menu> {
                       color: Color.fromARGB(255, 0, 0, 0),
                     ),
                     title: Text(
-                      widget.no_hp_,
+                      "",
                       style: TextStyle(
                           color: Color.fromARGB(255, 0, 0, 0),
                           fontSize: 20,

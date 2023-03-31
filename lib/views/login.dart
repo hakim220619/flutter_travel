@@ -26,7 +26,7 @@ class _LoginPageState extends State<LoginPage> {
       child: Column(
         children: [
           const SizedBox(
-            height: 200,
+            height: 100,
           ),
           Container(
             padding: const EdgeInsets.all(10),
@@ -106,7 +106,7 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ),
           const SizedBox(
-            height: 150,
+            height: 100,
           ),
           Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -165,7 +165,6 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ],
               ),
-              
             ],
           ),
         ],

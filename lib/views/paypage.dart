@@ -25,8 +25,6 @@ class payPage extends StatefulWidget {
   State<payPage> createState() => _payPageState();
 }
 
-
-
 class _payPageState extends State<payPage> {
   @override
   Widget build(BuildContext context) {
@@ -34,23 +32,11 @@ class _payPageState extends State<payPage> {
         appBar: AppBar(
           title: Text("Pembayaran"),
           leading: InkWell(
-            onTap: () async {
-              SharedPreferences prefs = await SharedPreferences.getInstance();
-              var id_user_ = prefs.getInt('id_user');
-              var nama_ = prefs.getString('nama');
-              var email_ = prefs.getString('email');
-              var no_hp_ = prefs.getString('no_hp');
-              var token_ = prefs.getString('token');
+            onTap: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (BuildContext context) => Dashboard(
-                    token_: token_.toString(),
-                    email_: email_.toString(),
-                    id_user_: id_user_.toString(),
-                    nama_: nama_.toString(),
-                    no_hp_: no_hp_.toString(),
-                  ),
+                  builder: (BuildContext context) => Menu(),
                 ),
               );
             },
@@ -60,7 +46,6 @@ class _payPageState extends State<payPage> {
             ),
           ),
         ),
-        
         body: Container(
           padding: EdgeInsets.all(20),
           child: Column(
@@ -141,9 +126,6 @@ class _payPageState extends State<payPage> {
                   ),
                 ),
               ),
-              
-              
-              
               Container(
                 height: 100,
                 width: double.infinity,
