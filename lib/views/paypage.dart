@@ -33,10 +33,10 @@ class _payPageState extends State<payPage> {
           title: Text("Pembayaran"),
           leading: InkWell(
             onTap: () {
-              Navigator.push(
+              Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (BuildContext context) => Menu(),
+                  builder: (BuildContext context) => const Dashboard(),
                 ),
               );
             },

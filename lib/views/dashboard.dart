@@ -187,14 +187,43 @@ class _MenuState extends State<Menu> {
           Uri.parse('https://travel.dlhcode.com/api/riwayat_tiket');
       http.Response response = await _client.post(_riwayatTiket, body: {
         "email": email,
-        "id_user": id_user,
+        "id_user": id_user.toString(),
       });
-
+      // print(response.statusCode);
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         // print(data);
         setState(() {
           _get = data['data'];
+
+          // print(_get);
+        });
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  List _getProfile = [];
+  Future profile() async {
+    try {
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      var email = preferences.getString('email');
+      var token = preferences.getString('token');
+
+      var _riwayatTiket = Uri.parse('https://travel.dlhcode.com/api/profile');
+      http.Response response = await _client.post(_riwayatTiket, headers: {
+        "Accept": "application/json",
+        "Authorization": "Bearer " + token.toString(),
+      }, body: {
+        "email": email.toString(),
+      });
+      // print(response.statusCode);
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        // print(data);
+        setState(() {
+          _getProfile = data['data'];
 
           print(_get);
         });
@@ -210,6 +239,7 @@ class _MenuState extends State<Menu> {
       getagentFrom();
       getagentTo();
       riwayatTiket();
+      profile();
     });
   }
 
@@ -219,10 +249,21 @@ class _MenuState extends State<Menu> {
     });
   }
 
+  final _formkey = GlobalKey<FormState>();
+
+  @override
   void initState() {
+    super.initState();
     getagentFrom();
     getagentTo();
     riwayatTiket();
+    profile();
+  }
+
+  @override
+  void dispose() {
+    _formkey.currentState?.dispose();
+    super.dispose();
   }
 
   var profilePhoto = "http://cdn.onlinewebfonts.com/svg/img_299586.png";
