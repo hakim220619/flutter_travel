@@ -61,39 +61,39 @@ class _DashboardState extends State<Dashboard> {
     }
   }
 
-  // Future<void> _showMyDialog(String title, String text, String nobutton,
-  //     String yesbutton, Function onTap, bool isValue) async {
-  //   return showDialog<void>(
-  //     context: context,
-  //     barrierDismissible: isValue,
-  //     builder: (BuildContext context) {
-  //       return AlertDialog(
-  //         title: Text(title),
-  //         content: SingleChildScrollView(
-  //           child: ListBody(
-  //             children: <Widget>[
-  //               Text(text),
-  //             ],
-  //           ),
-  //         ),
-  //         actions: <Widget>[
-  //           TextButton(
-  //             child: Text(nobutton),
-  //             onPressed: () {
-  //               Logout();
-  //             },
-  //           ),
-  //           TextButton(
-  //             child: Text(yesbutton),
-  //             onPressed: () async {
-  //               onTap();
-  //             },
-  //           ),
-  //         ],
-  //       );
-  //     },
-  //   );
-  // }
+  Future<void> _showMyDialog(String title, String text, String nobutton,
+      String yesbutton, Function onTap, bool isValue) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: isValue,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text(text),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text(nobutton),
+              onPressed: () {
+                onTap();
+              },
+            ),
+            TextButton(
+              child: Text(yesbutton),
+              onPressed: () async {
+                Logout();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -105,11 +105,9 @@ class _DashboardState extends State<Dashboard> {
                 IconButton(
                   icon: Icon(Icons.power_settings_new),
                   onPressed: () {
-                    // _showMyDialog('Log Out', 'Are you sure you want to logout?',
-                    //     'No', 'Yes', () async {
-                    //   Logout();
-                    // }, false);
-                    Logout();
+                    _showMyDialog('Log Out', 'Are you sure you want to logout?',
+                        'No', 'Yes', () async {}, true);
+
                     child:
                     Text(
                       'Log Out',
@@ -221,16 +219,31 @@ class _MenuState extends State<Menu> {
       // print(response.statusCode);
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        // print(data);
-        setState(() {
-          _getProfile = data['data'];
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        var nama = prefs.getString('nama');
+        print(nama);
+        var _getProfile = nama.toString();
+        // setState(() {
+        //   _getProfile = data['data'];
 
-          print(_get);
-        });
+        //   print(id_user);
+        // });
       }
     } catch (e) {
       print(e);
     }
+  }
+
+  var nama;
+  var email;
+  var no_hp;
+  void loginStatus() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() => {
+          nama = prefs.getString('nama'),
+          email = prefs.getString('email'),
+          no_hp = prefs.getString('no_hp'),
+        });
   }
 
   void _onItemTapped(int index) {
@@ -240,6 +253,7 @@ class _MenuState extends State<Menu> {
       getagentTo();
       riwayatTiket();
       profile();
+      loginStatus();
     });
   }
 
@@ -258,6 +272,7 @@ class _MenuState extends State<Menu> {
     getagentTo();
     riwayatTiket();
     profile();
+    loginStatus();
   }
 
   @override
@@ -508,77 +523,82 @@ class _MenuState extends State<Menu> {
           ),
         ),
       ),
-      Column(children: [
-        SafeArea(
-          minimum: const EdgeInsets.only(top: 100),
-          child: Column(
-            children: <Widget>[
-              CircleAvatar(
-                radius: 50,
-                // backgroundImage: Colors.black,
-              ),
-              Text(
-                "",
-                style: TextStyle(
-                  fontSize: 40.0,
-                  color: Color.fromARGB(255, 0, 0, 0),
-                  fontWeight: FontWeight.bold,
-                  fontFamily: "Pacifico",
+      Column(
+        children: [
+          // ListView.builder(
+          //   itemCount: _getProfile.length,
+          //   itemBuilder: (context, index) =>
+          SafeArea(
+            minimum: const EdgeInsets.only(top: 100),
+            child: Column(
+              children: <Widget>[
+                CircleAvatar(
+                  radius: 50,
+                  // backgroundImage: Colors.black,
                 ),
-              ),
-
-              SizedBox(
-                height: 20,
-                width: 200,
-                child: Divider(
-                  color: Colors.white,
+                Text(
+                  "${this.nama}",
+                  style: TextStyle(
+                    fontSize: 40.0,
+                    color: Color.fromARGB(255, 0, 0, 0),
+                    fontWeight: FontWeight.bold,
+                    fontFamily: "Pacifico",
+                  ),
                 ),
-              ),
 
-              // we will be creating a new widget name info carrd
+                SizedBox(
+                  height: 20,
+                  width: 200,
+                  child: Divider(
+                    color: Colors.white,
+                  ),
+                ),
 
-              GestureDetector(
-                child: Card(
-                  color: Colors.white,
-                  margin: EdgeInsets.symmetric(vertical: 10, horizontal: 25),
-                  child: ListTile(
-                    leading: Icon(
-                      Icons.email,
-                      color: Color.fromARGB(255, 0, 0, 0),
-                    ),
-                    title: Text(
-                      "",
-                      style: TextStyle(
-                          color: Color.fromARGB(255, 0, 0, 0),
-                          fontSize: 20,
-                          fontFamily: "Source Sans Pro"),
+                // we will be creating a new widget name info carrd
+
+                GestureDetector(
+                  child: Card(
+                    color: Colors.white,
+                    margin: EdgeInsets.symmetric(vertical: 10, horizontal: 25),
+                    child: ListTile(
+                      leading: Icon(
+                        Icons.email,
+                        color: Color.fromARGB(255, 0, 0, 0),
+                      ),
+                      title: Text(
+                        "${this.email}",
+                        style: TextStyle(
+                            color: Color.fromARGB(255, 0, 0, 0),
+                            fontSize: 20,
+                            fontFamily: "Source Sans Pro"),
+                      ),
                     ),
                   ),
                 ),
-              ),
-              GestureDetector(
-                child: Card(
-                  color: Colors.white,
-                  margin: EdgeInsets.symmetric(vertical: 10, horizontal: 25),
-                  child: ListTile(
-                    leading: Icon(
-                      Icons.call,
-                      color: Color.fromARGB(255, 0, 0, 0),
-                    ),
-                    title: Text(
-                      "",
-                      style: TextStyle(
-                          color: Color.fromARGB(255, 0, 0, 0),
-                          fontSize: 20,
-                          fontFamily: "Source Sans Pro"),
+                GestureDetector(
+                  child: Card(
+                    color: Colors.white,
+                    margin: EdgeInsets.symmetric(vertical: 10, horizontal: 25),
+                    child: ListTile(
+                      leading: Icon(
+                        Icons.call,
+                        color: Color.fromARGB(255, 0, 0, 0),
+                      ),
+                      title: Text(
+                        "${this.no_hp}",
+                        style: TextStyle(
+                            color: Color.fromARGB(255, 0, 0, 0),
+                            fontSize: 20,
+                            fontFamily: "Source Sans Pro"),
+                      ),
                     ),
                   ),
-                ),
-              )
-            ],
+                )
+              ],
+            ),
           ),
-        )
-      ]),
+        ],
+      ),
     ];
 
     return Scaffold(
