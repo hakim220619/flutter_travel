@@ -243,7 +243,6 @@ class _MenuState extends State<Menu> {
       }, body: {
         "email": email.toString(),
       });
-      // print(response.statusCode);
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         SharedPreferences prefs = await SharedPreferences.getInstance();
