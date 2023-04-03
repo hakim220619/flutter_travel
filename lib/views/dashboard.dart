@@ -106,7 +106,7 @@ class _DashboardState extends State<Dashboard> {
                   icon: Icon(Icons.power_settings_new),
                   onPressed: () {
                     _showMyDialog('Log Out', 'Are you sure you want to logout?',
-                        'No', 'Yes', () async {}, true);
+                        'No', 'Yes', () async {}, false);
 
                     child:
                     Text(
@@ -190,12 +190,47 @@ class _MenuState extends State<Menu> {
       // print(response.statusCode);
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        // print(data);
+
         setState(() {
           _get = data['data'];
-
-          // print(_get);
         });
+        var _orderid =
+            Uri.parse('https://travel.dlhcode.com/api/cek_transaksi');
+        http.Response getOrderId = await _client.post(_orderid, body: {
+          "id_user": id_user.toString(),
+        });
+        // print(getOrderId);
+        if (getOrderId.statusCode == 200) {
+          final dataOrderId = jsonDecode(getOrderId.body)['data'];
+
+          for (var i = 0; i < dataOrderId.length; i++) {
+            var orderId = dataOrderId[i]['order_id'];
+            // print(orderId);
+            String username = 'SB-Mid-server-z5T9WhivZDuXrJxC7w-civ_k';
+            String password = '';
+            String basicAuth =
+                'Basic ' + base64Encode(utf8.encode('$username:$password'));
+            print(orderId);
+            http.Response responseTransaksi = await _client.get(
+              Uri.parse(
+                  "https://api.sandbox.midtrans.com/v2/" + orderId + "/status"),
+              headers: <String, String>{
+                'authorization': basicAuth,
+                'Content-Type': 'application/json'
+              },
+            );
+            var jsonTransaksi = jsonDecode(responseTransaksi.body.toString());
+            // print(jsonTransaksi['status_code']);
+            if (jsonTransaksi['status_code'] == 200) {
+              var updateTransaksi =
+                  Uri.parse('https://travel.dlhcode.com/api/updateTransaksi');
+              http.Response getOrderId =
+                  await _client.post(updateTransaksi, body: {
+                "order_id": orderId,
+              });
+            }
+          }
+        }
       }
     } catch (e) {
       print(e);
