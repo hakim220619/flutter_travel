@@ -53,7 +53,7 @@ class _DashboardState extends State<Dashboard> {
           MaterialPageRoute(
             builder: (BuildContext context) => LoginPage(),
           ),
-          (route) => false,
+          (route) => true,
         );
       }
     } catch (e) {
@@ -149,6 +149,7 @@ class _MenuState extends State<Menu> {
   static final _client = http.Client();
   var asal;
   var tujuan;
+  var FixLunas;
 
   //Future
   Future getagentFrom() async {
@@ -188,18 +189,31 @@ class _MenuState extends State<Menu> {
       });
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
+        // var _TransaksiLunas =
+        //     Uri.parse('https://travel.dlhcode.com/api/cek_transaksiLunas');
+        // http.Response lunas = await _client.post(_TransaksiLunas, body: {
+        //   "id_user": id_user.toString(),
+        // });
+
+        // final dataLunas = jsonDecode(lunas.body);
+        // print(dataLunas);
+        // print(getOrderId.statusCode);
         setState(() {
           _get = data['data'];
+          // FixLunas = dataLunas['data'];
         });
         var _orderid =
             Uri.parse('https://travel.dlhcode.com/api/cek_transaksi');
         http.Response getOrderId = await _client.post(_orderid, body: {
           "id_user": id_user.toString(),
         });
+
         if (getOrderId.statusCode == 200) {
           final dataOrderId = jsonDecode(getOrderId.body)['data'];
+          // print(dataOrderId);
           for (var i = 0; i < dataOrderId.length; i++) {
             var orderId = dataOrderId[i]['order_id'];
+            // print(i);
             String username = 'SB-Mid-server-z5T9WhivZDuXrJxC7w-civ_k';
             String password = '';
             String basicAuth =
@@ -213,13 +227,15 @@ class _MenuState extends State<Menu> {
               },
             );
             var jsonTransaksi = jsonDecode(responseTransaksi.body.toString());
-            if (jsonTransaksi['status_code'] == 200) {
+
+            if (jsonTransaksi['status_code'] == '200') {
               var updateTransaksi =
                   Uri.parse('https://travel.dlhcode.com/api/updateTransaksi');
               http.Response getOrderId =
                   await _client.post(updateTransaksi, body: {
                 "order_id": orderId,
               });
+              // print(jsonTransaksi['status_code']);
             }
           }
         }
@@ -247,7 +263,7 @@ class _MenuState extends State<Menu> {
         final data = jsonDecode(response.body);
         SharedPreferences prefs = await SharedPreferences.getInstance();
         var nama = prefs.getString('nama');
-        print(nama);
+        // print(nama);
         var _getProfile = nama.toString();
       }
     } catch (e) {
@@ -528,16 +544,32 @@ class _MenuState extends State<Menu> {
                   overflow: TextOverflow.ellipsis,
                 ),
                 onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => payPage(
-                              nama: _get[index]['nama_pemesan'].toString(),
-                              email: _get[index]['email'].toString(),
-                              no_hp: _get[index]['no_hp'].toString(),
-                              status: _get[index]['status'].toString(),
-                              redirect_url:
-                                  _get[index]['redirect_url'].toString())));
+                  if (_get[index]['status'] == 'lunas') {
+                    showDialog<String>(
+                      context: context,
+                      builder: (BuildContext context) => AlertDialog(
+                        title: const Text('Success!!'),
+                        content: const Text('Pembayaran Telah Lunas'),
+                        actions: <Widget>[
+                          TextButton(
+                            onPressed: () => Navigator.pop(context, 'OK'),
+                            child: const Text('OK'),
+                          ),
+                        ],
+                      ),
+                    );
+                  } else {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => payPage(
+                                nama: _get[index]['nama_pemesan'].toString(),
+                                email: _get[index]['email'].toString(),
+                                no_hp: _get[index]['no_hp'].toString(),
+                                status: _get[index]['status'].toString(),
+                                redirect_url:
+                                    _get[index]['redirect_url'].toString())));
+                  }
                 },
               ),
             ),
