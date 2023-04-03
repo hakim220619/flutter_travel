@@ -16,7 +16,6 @@ class HttpService {
   static final _client = http.Client();
 
   static var _loginUrl = Uri.parse('https://travel.dlhcode.com/api/login');
-
   static var _registerUrl =
       Uri.parse('https://travel.dlhcode.com/api/register');
   static var _pesanUrl =

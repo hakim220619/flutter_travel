@@ -152,8 +152,7 @@ class _RegisterPageState extends State<RegisterPage> {
               ],
             ),
           ),
-        )
-        // ignore: avoid_unnecessary_containers
+      ),
         );
   }
 }
