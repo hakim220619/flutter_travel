@@ -250,11 +250,6 @@ class _MenuState extends State<Menu> {
         var nama = prefs.getString('nama');
         print(nama);
         var _getProfile = nama.toString();
-        // setState(() {
-        //   _getProfile = data['data'];
-
-        //   print(id_user);
-        // });
       }
     } catch (e) {
       print(e);
