@@ -180,17 +180,14 @@ class _MenuState extends State<Menu> {
       SharedPreferences preferences = await SharedPreferences.getInstance();
       var email = preferences.getString('email');
       var id_user = preferences.getInt('id_user');
-
       var _riwayatTiket =
           Uri.parse('https://travel.dlhcode.com/api/riwayat_tiket');
       http.Response response = await _client.post(_riwayatTiket, body: {
         "email": email,
         "id_user": id_user.toString(),
       });
-      // print(response.statusCode);
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-
         setState(() {
           _get = data['data'];
         });
@@ -199,18 +196,14 @@ class _MenuState extends State<Menu> {
         http.Response getOrderId = await _client.post(_orderid, body: {
           "id_user": id_user.toString(),
         });
-        // print(getOrderId);
         if (getOrderId.statusCode == 200) {
           final dataOrderId = jsonDecode(getOrderId.body)['data'];
-
           for (var i = 0; i < dataOrderId.length; i++) {
             var orderId = dataOrderId[i]['order_id'];
-            // print(orderId);
             String username = 'SB-Mid-server-z5T9WhivZDuXrJxC7w-civ_k';
             String password = '';
             String basicAuth =
                 'Basic ' + base64Encode(utf8.encode('$username:$password'));
-            print(orderId);
             http.Response responseTransaksi = await _client.get(
               Uri.parse(
                   "https://api.sandbox.midtrans.com/v2/" + orderId + "/status"),
@@ -220,7 +213,6 @@ class _MenuState extends State<Menu> {
               },
             );
             var jsonTransaksi = jsonDecode(responseTransaksi.body.toString());
-            // print(jsonTransaksi['status_code']);
             if (jsonTransaksi['status_code'] == 200) {
               var updateTransaksi =
                   Uri.parse('https://travel.dlhcode.com/api/updateTransaksi');
