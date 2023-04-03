@@ -66,7 +66,6 @@ class HttpService {
       "nama": nama,
       "no_hp": noHp,
     });
-    // print(response.body);
     if (response.statusCode == 200) {
       var json = jsonDecode(response.body.toString());
 
