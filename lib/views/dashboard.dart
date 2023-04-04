@@ -525,12 +525,16 @@ class _MenuState extends State<Menu> {
               elevation: 8,
               child: ListTile(
                 leading: CircleAvatar(
-                  backgroundColor: Color.fromARGB(255, 131, 90, 214),
-                  child: Icon(Icons.directions_car),
+                  backgroundColor: Color.fromARGB(255, 48, 31, 83),
+                  child: Icon(
+                    Icons.directions_car,
+                    color: Colors.white,
+                  ),
                 ),
                 title: Text(
                   "Dari " + _get[index]['asal'] + ' | ' + _get[index]['tujuan'],
-                  style: new TextStyle(fontSize: 18.0),
+                  style: new TextStyle(
+                      fontSize: 15.0, fontWeight: FontWeight.bold),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -540,9 +544,10 @@ class _MenuState extends State<Menu> {
                           "Tgl " +
                       _get[index]['created_at'].toString().substring(0, 10),
                   maxLines: 2,
-                  style: new TextStyle(fontSize: 18.0),
+                  style: new TextStyle(fontSize: 14.0),
                   overflow: TextOverflow.ellipsis,
                 ),
+                trailing: Text("10:00 PM"),
                 onTap: () {
                   if (_get[index]['status'] == 'lunas') {
                     showDialog<String>(

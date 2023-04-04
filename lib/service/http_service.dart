@@ -168,7 +168,9 @@ class HttpService {
                   email: email,
                   no_hp: noHp,
                   status: "belum bayar",
-                  redirect_url: jsonMidtrans['redirect_url'])));
+                    redirect_url: jsonMidtrans['redirect_url'],
+                    order_id: number.toString(),
+                  )));
     }
   }
 }

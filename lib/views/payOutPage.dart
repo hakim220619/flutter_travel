@@ -5,6 +5,7 @@ import 'package:travel/views/dashboard.dart';
 import 'package:travel/views/login.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/services.dart';
 // import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
 class payOutPage extends StatefulWidget {
@@ -15,12 +16,14 @@ class payOutPage extends StatefulWidget {
     required this.no_hp,
     required this.status,
     required this.redirect_url,
+    required this.order_id,
   }) : super(key: key);
   final String nama;
   final String email;
   final String no_hp;
   final String status;
   final String redirect_url;
+  final String order_id;
 
   @override
   State<payOutPage> createState() => _payOutPageState();
@@ -51,6 +54,37 @@ class _payOutPageState extends State<payOutPage> {
           padding: EdgeInsets.all(20),
           child: Column(
             children: [
+              GestureDetector(
+                child: Card(
+                  color: Colors.white,
+                  margin: EdgeInsets.symmetric(vertical: 10, horizontal: 25),
+                  child: ListTile(
+                    leading: Icon(
+                      Icons.key,
+                      color: Color.fromARGB(255, 0, 0, 0),
+                    ),
+                    title: Text(
+                      widget.order_id,
+                      style: TextStyle(
+                          color: Color.fromARGB(255, 0, 0, 0),
+                          fontSize: 20,
+                          fontFamily: "Source Sans Pro"),
+                    ),
+                    trailing: IconButton(
+                        icon: Icon(Icons.copy),
+                        onPressed: () async {
+                          //logic to open POPUP window
+                          Clipboard.setData(
+                                  new ClipboardData(text: widget.order_id))
+                              .then((_) {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                content: Text('Copied to your clipboard !')));
+                          });
+                        }),
+                  ),
+                ),
+              ),
+              
               GestureDetector(
                 child: Card(
                   color: Colors.white,
