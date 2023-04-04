@@ -5,6 +5,7 @@ import 'package:email_validator/email_validator.dart';
 import 'package:travel/views/bookingPage.dart';
 import 'package:travel/views/register.dart';
 import 'package:cool_alert/cool_alert.dart';
+import 'package:travel/views/tiket.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -142,7 +143,7 @@ class _LoginPageState extends State<LoginPage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const Add(),
+                          builder: (context) => TiketPage(),
                         ),
                       );
                     },

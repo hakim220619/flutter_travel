@@ -46,6 +46,7 @@ class _DashboardState extends State<Dashboard> {
           preferences.remove("no_hp");
           preferences.remove("token");
           preferences.remove("id_user");
+          preferences.remove("order_id");
         });
 
         Navigator.pushAndRemoveUntil(
@@ -189,18 +190,9 @@ class _MenuState extends State<Menu> {
       });
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        // var _TransaksiLunas =
-        //     Uri.parse('https://travel.dlhcode.com/api/cek_transaksiLunas');
-        // http.Response lunas = await _client.post(_TransaksiLunas, body: {
-        //   "id_user": id_user.toString(),
-        // });
-
-        // final dataLunas = jsonDecode(lunas.body);
-        // print(dataLunas);
-        // print(getOrderId.statusCode);
+       
         setState(() {
           _get = data['data'];
-          // FixLunas = dataLunas['data'];
         });
         var _orderid =
             Uri.parse('https://travel.dlhcode.com/api/cek_transaksi');
