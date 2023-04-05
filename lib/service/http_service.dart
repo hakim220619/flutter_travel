@@ -46,7 +46,7 @@ class HttpService {
       await pref.setInt("id_user", id_user);
       await pref.setString("no_hp", no_hp);
       await pref.setBool("is_login", true);
-      print(jsonUsers['user']['role_id']);
+      // print(jsonUsers['user']['role_id']);
       if (jsonUsers['user']['role_id'] == '2') {
         Navigator.pushAndRemoveUntil(
           context,
