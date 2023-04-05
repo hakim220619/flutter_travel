@@ -25,22 +25,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.2.3"
-  barcode_scan:
-    dependency: "direct main"
-    description:
-      name: barcode_scan
-      sha256: "4e5dc76de387276eac1dc05f26a6eee64dd78008c01ddd891dea3f58b564be14"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.0.1"
-  barcode_scanner:
-    dependency: "direct main"
-    description:
-      name: barcode_scanner
-      sha256: "16b8c59c4a24db843fd3adf3f09dffff478e302768281fefb1d69691364db5ba"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.2.4"
   barcode_widget:
     dependency: "direct main"
     description:
@@ -137,14 +121,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.1.4"
-  fixnum:
-    dependency: transitive
-    description:
-      name: fixnum
-      sha256: "3b298dacb1898a8f5fddec19388b899b0f13195066b89fa66391e5e92f6c2052"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.10.11"
   flare_flutter:
     dependency: transitive
     description:
@@ -248,14 +224,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.6.5"
-  json_annotation:
-    dependency: transitive
-    description:
-      name: json_annotation
-      sha256: c33da08e136c3df0190bd5bbe51ae1df4a7d96e7954d1d7249fea2968a72d317
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.8.0"
   lints:
     dependency: transitive
     description:
@@ -264,14 +232,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.1"
-  logging:
-    dependency: transitive
-    description:
-      name: logging
-      sha256: "04094f2eb032cbb06c6f6e8d3607edcfcb0455e2bb6cbc010cb01171dcb64e6d"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.1.1"
   lottie:
     dependency: transitive
     description:
@@ -368,14 +328,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.2.4"
-  protobuf:
-    dependency: transitive
-    description:
-      name: protobuf
-      sha256: "1f818f8f5de28e551cfc2a993c5a31a7f534618345654c904e203c0112abed55"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.1.4"
   qr:
     dependency: transitive
     description:

@@ -14,11 +14,11 @@
     <data android:scheme="https" />
   </intent>
 </queries>
-<uses-permission android:name="android.permission.CAMERA" />
+
    <application
         android:label="travel"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/logo"
         android:usesCleartextTraffic="true">
         <activity
             android:name=".MainActivity"
