@@ -54,7 +54,7 @@ class _DashboardState extends State<Dashboard> {
           MaterialPageRoute(
             builder: (BuildContext context) => LoginPage(),
           ),
-          (route) => true,
+          (route) => false,
         );
       }
     } catch (e) {
@@ -190,7 +190,7 @@ class _MenuState extends State<Menu> {
       });
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-       
+
         setState(() {
           _get = data['data'];
         });
