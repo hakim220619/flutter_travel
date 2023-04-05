@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:travel/views/dashboard.dart';
+import 'package:travel/views/dashboardS.dart';
 import 'package:travel/views/listBooking.dart';
 import 'package:travel/views/login.dart';
 import 'package:travel/views/payOutPage.dart';
@@ -11,6 +12,7 @@ import 'package:travel/views/paypage.dart';
 import 'package:travel/views/welcome.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:math';
+
 
 class HttpService {
   static final _client = http.Client();
@@ -44,14 +46,24 @@ class HttpService {
       await pref.setInt("id_user", id_user);
       await pref.setString("no_hp", no_hp);
       await pref.setBool("is_login", true);
-
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(
-          builder: (BuildContext context) => Dashboard(),
-        ),
-        (route) => false,
-      );
+      print(jsonUsers['user']['role_id']);
+      if (jsonUsers['user']['role_id'] == '2') {
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (BuildContext context) => Dashboard(),
+          ),
+          (route) => false,
+        );
+      } else {
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (BuildContext context) => DashboardS(),
+          ),
+          (route) => false,
+        );
+      }
     } else {
       await EasyLoading.showError(
           "Error Code : ${response.statusCode.toString()}");
@@ -164,10 +176,10 @@ class HttpService {
           context,
           MaterialPageRoute(
               builder: (context) => payOutPage(
-                  nama: nama,
-                  email: email,
-                  no_hp: noHp,
-                  status: "belum bayar",
+                    nama: nama,
+                    email: email,
+                    no_hp: noHp,
+                    status: "belum bayar",
                     redirect_url: jsonMidtrans['redirect_url'],
                     order_id: number.toString(),
                   )));

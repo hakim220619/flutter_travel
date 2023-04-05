@@ -12,6 +12,7 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:travel/views/listBooking.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'cetak_page.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({
@@ -320,7 +321,7 @@ class _MenuState extends State<Menu> {
       Container(
         child: SafeArea(
           child: Material(
-            color: Colors.white,
+           
             child: SingleChildScrollView(
               child: Form(
                 key: _formkey,
@@ -539,22 +540,23 @@ class _MenuState extends State<Menu> {
                   style: new TextStyle(fontSize: 14.0),
                   overflow: TextOverflow.ellipsis,
                 ),
-                trailing: Text("10:00 PM"),
+                trailing: Text(
+                  _get[index]['tgl_keberangkatan'].toString().substring(10, 19),
+                ),
                 onTap: () {
                   if (_get[index]['status'] == 'lunas') {
-                    showDialog<String>(
-                      context: context,
-                      builder: (BuildContext context) => AlertDialog(
-                        title: const Text('Success!!'),
-                        content: const Text('Pembayaran Telah Lunas'),
-                        actions: <Widget>[
-                          TextButton(
-                            onPressed: () => Navigator.pop(context, 'OK'),
-                            child: const Text('OK'),
-                          ),
-                        ],
-                      ),
-                    );
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => TicketData(
+                                  order_id: _get[index]['order_id'].toString(),
+                                  nama: _get[index]['nama_pemesan'].toString(),
+                                  tanggal: _get[index]['tgl_keberangkatan']
+                                      .toString(),
+                                  email: _get[index]['email'].toString(),
+                                  no_hp: _get[index]['no_hp'].toString(),
+                                  status: _get[index]['status'].toString(),
+                                )));
                   } else {
                     Navigator.push(
                         context,
