@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:io';
+import 'package:barcode_widget/barcode_widget.dart';
 
 class TicketData extends StatefulWidget {
   const TicketData({
@@ -17,12 +18,14 @@ class TicketData extends StatefulWidget {
     required this.tanggal,
     required this.email,
     required this.no_hp,
+    required this.status,
   }) : super(key: key);
   final String order_id;
   final String nama;
   final String tanggal;
   final String email;
   final String no_hp;
+  final String status;
 
   @override
   State<TicketData> createState() => _TicketDataState();
@@ -85,11 +88,11 @@ class _TicketDataState extends State<TicketData> {
                           Padding(
                             padding: const EdgeInsets.only(top: 12.0),
                             child: ticketDetailsWidget("Nama", '${widget.nama}',
-                                'Tanggal', '${widget.tanggal}'),
+                                'Tanggal Berangkat', '${widget.tanggal}'),
                           ),
                           Padding(
                             padding:
-                                const EdgeInsets.only(top: 12.0, right: 55),
+                                const EdgeInsets.only(top: 12.0, right: 45),
                             child: ticketDetailsWidget('Email',
                                 '${widget.email}', 'No Hp', '${widget.no_hp}'),
                           ),
@@ -98,7 +101,7 @@ class _TicketDataState extends State<TicketData> {
                     ),
                     Padding(
                       padding: const EdgeInsets.only(
-                        top: 80.0,
+                        top: 40.0,
                       ),
                       child: Container(
                         width: 250.0,
@@ -109,12 +112,37 @@ class _TicketDataState extends State<TicketData> {
                         //         fit: BoxFit.cover)),
                       ),
                     ),
-                    const Center(
-                      child: Text(
-                        'Status: Lunas',
-                        style: TextStyle(color: Colors.black, fontSize: 30),
+                    
+                    Container(
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(
+                              bottomRight: Radius.circular(21),
+                              bottomLeft: Radius.circular(21))),
+                      margin: EdgeInsets.only(left: 15, right: 15),
+                      padding: EdgeInsets.only(top: 0, bottom: 20),
+                      child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 15),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(15),
+                          child: BarcodeWidget(
+                            barcode: Barcode.code128(),
+                            data: "${widget.order_id}",
+                            drawText: false,
+                            color: Color.fromARGB(255, 14, 5, 5),
+                            width: double.infinity,
+                            height: 70,
+                          ),
+                        ),
                       ),
+
+                      // child: Text(
+                      //   'Status: Lunas',
+                      //   style: TextStyle(color: Colors.black, fontSize: 30),
+                      // ),
                     ),
+                    Text("Status: " "${widget.status}"),
+                    // Text("Jam Berangkat: " "${widget.status}"),
                     const SizedBox(height: 20),
                     Center(
                       child: ElevatedButton(

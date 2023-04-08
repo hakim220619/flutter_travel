@@ -76,7 +76,7 @@ class _TiketPageState extends State<TiketPage> {
                       await TiketPage._client.post(_riwayatTiket, body: {
                     "order_id": kodeBooking,
                   });
-                  print(response.statusCode);
+                  // print(response.statusCode);
                   if (response.statusCode == 200) {
                     var data = jsonDecode(response.body.toString());
                     // print(data['data']['order_id']);
@@ -91,6 +91,7 @@ class _TiketPageState extends State<TiketPage> {
                                       data['data']['created_at'].toString(),
                                   email: data['data']['email'].toString(),
                                   no_hp: data['data']['no_hp'].toString(),
+                                  status: data['data']['status'].toString(),
                                 )));
                   } else {
                     showDialog<String>(

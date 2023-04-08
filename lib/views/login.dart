@@ -15,6 +15,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  TextEditingController emailEditController = TextEditingController();
   late String email;
   late String password;
   final _formKey = GlobalKey<FormState>();
@@ -32,10 +33,11 @@ class _LoginPageState extends State<LoginPage> {
           Container(
             padding: const EdgeInsets.all(10),
             child: Center(
-                child: Icon(
-              directions_car,
-              size: 100,
-            )),
+              child: Image.asset(
+                'assets/images/logo.png',
+                height: 100,
+              ),
+            ),
           ),
           Container(
             padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
@@ -48,6 +50,8 @@ class _LoginPageState extends State<LoginPage> {
                 return null;
               },
               maxLines: 1,
+              keyboardType: TextInputType.text,
+              controller: emailEditController,
               decoration: InputDecoration(
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
