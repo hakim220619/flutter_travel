@@ -16,6 +16,11 @@ class _RegisterPageState extends State<RegisterPage> {
   late String role;
   final _formKey = GlobalKey<FormState>();
   @override
+  bool _passwordVisible = false;
+  void initState() {
+    _passwordVisible = false;
+    super.initState();
+  }
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(title: const Text('Register')),
@@ -76,7 +81,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   height: 10,
                 ),
                 TextFormField(
-                  obscureText: true,
+                obscureText: !_passwordVisible,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Masukan Password';
@@ -88,6 +93,16 @@ class _RegisterPageState extends State<RegisterPage> {
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10.0),
                       ),
+                    suffixIcon: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _passwordVisible = _passwordVisible ? false : true;
+                        });
+                      },
+                      child: Icon(_passwordVisible
+                          ? Icons.visibility
+                          : Icons.visibility_off),
+                    ),
                       prefixIcon: const Icon(Icons.key),
                       labelText: 'Masukan Password',
                       hintText: 'Masukan Password'),

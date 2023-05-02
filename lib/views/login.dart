@@ -11,17 +11,25 @@ class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
 
   @override
+  
   _LoginPageState createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
+  
   TextEditingController emailEditController = TextEditingController();
   late String email;
   late String password;
   final _formKey = GlobalKey<FormState>();
   static const IconData directions_car =
       IconData(0xe1d7, fontFamily: 'MaterialIcons');
+
   @override
+  bool _passwordVisible = false;
+  void initState() {
+    _passwordVisible = false;
+    super.initState();
+  }
   Widget build(BuildContext context) {
     return Form(
       key: _formKey,
@@ -76,10 +84,20 @@ class _LoginPageState extends State<LoginPage> {
                 return null;
               },
               maxLines: 1,
-              obscureText: true,
+              obscureText: !_passwordVisible,
               decoration: InputDecoration(
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  suffixIcon: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _passwordVisible = _passwordVisible ? false : true;
+                      });
+                    },
+                    child: Icon(_passwordVisible
+                        ? Icons.visibility
+                        : Icons.visibility_off),
                   ),
                   prefixIcon: const Icon(Icons.lock),
                   labelText: 'Masukan Password',

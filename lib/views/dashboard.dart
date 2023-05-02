@@ -81,9 +81,7 @@ class _DashboardState extends State<Dashboard> {
           actions: <Widget>[
             TextButton(
               child: Text(nobutton),
-              onPressed: () {
-                onTap();
-              },
+              onPressed: () => Navigator.pop(context),
             ),
             TextButton(
               child: Text(yesbutton),
