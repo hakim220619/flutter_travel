@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+// ignore: unused_import
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:async';
+// ignore: unused_import
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:travel/views/pesanPage.dart';
 

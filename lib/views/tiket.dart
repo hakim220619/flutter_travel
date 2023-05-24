@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
+// ignore: unused_import
 import 'package:flutter/src/widgets/placeholder.dart';
+// ignore: unused_import
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+// ignore: unused_import
 import 'package:email_validator/email_validator.dart';
+// ignore: unused_import
 import 'package:ticket_widget/ticket_widget.dart';
 import 'package:travel/views/cetak_page.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+// ignore: unused_import
 import 'dart:io';
+// ignore: duplicate_import
 import 'cetak_page.dart';
+// ignore: unused_import
 import 'package:shared_preferences/shared_preferences.dart';
 
 class TiketPage extends StatefulWidget {
@@ -22,6 +29,7 @@ class TiketPage extends StatefulWidget {
 
 class _TiketPageState extends State<TiketPage> {
   @override
+  // ignore: override_on_non_overriding_member
   final _formKey = GlobalKey<FormState>();
 
   late String kodeBooking;
@@ -76,22 +84,52 @@ class _TiketPageState extends State<TiketPage> {
                       await TiketPage._client.post(_riwayatTiket, body: {
                     "order_id": kodeBooking,
                   });
-                  // print(response.statusCode);
+                  print(response.body);
+
                   if (response.statusCode == 200) {
                     var data = jsonDecode(response.body.toString());
                     // print(data['data']['order_id']);
 
+                    // print(i);
+                    String username = 'SB-Mid-server-z5T9WhivZDuXrJxC7w-civ_k';
+                    String password = '';
+                    String basicAuth = 'Basic ' +
+                        base64Encode(utf8.encode('$username:$password'));
+                    http.Response responseTransaksi = await http.get(
+                      Uri.parse("https://api.sandbox.midtrans.com/v2/" +
+                          kodeBooking +
+                          "/status"),
+                      headers: <String, String>{
+                        'authorization': basicAuth,
+                        'Content-Type': 'application/json'
+                      },
+                    );
+                    var jsonTransaksi =
+                        jsonDecode(responseTransaksi.body.toString());
+
+                    if (jsonTransaksi['status_code'] == '200') {
+                      var updateTransaksi = Uri.parse(
+                          'https://travel.dlhcode.com/api/updateTransaksi');
+                      // ignore: unused_local_variable
+                      http.Response getOrderId =
+                          await http.post(updateTransaksi, body: {
+                        "order_id": kodeBooking,
+                      });
+                      // print(jsonTransaksi['status_code']);
+                    }
                     Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => TicketData(
-                                  order_id: data['data']['order_id'].toString(),
-                                  nama: data['data']['nama_pemesan'].toString(),
+                                  order_id:
+                                      data['data1']['order_id'].toString(),
+                                  nama:
+                                      data['data1']['nama_pemesan'].toString(),
                                   tanggal:
-                                      data['data']['created_at'].toString(),
-                                  email: data['data']['email'].toString(),
-                                  no_hp: data['data']['no_hp'].toString(),
-                                  status: data['data']['status'].toString(),
+                                      data['data1']['created_at'].toString(),
+                                  email: data['data1']['email'].toString(),
+                                  no_hp: data['data1']['no_hp'].toString(),
+                                  status: data['data1']['status'].toString(),
                                 )));
                   } else {
                     showDialog<String>(

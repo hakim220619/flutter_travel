@@ -1,14 +1,18 @@
 // import 'package:bus_ticket_booking_app/models/auth.dart';
 import 'package:flutter/material.dart';
+// ignore: unused_import
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 // import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:async';
+// ignore: unused_import
 import 'package:travel/service/http_service.dart';
+// ignore: unused_import
 import 'package:travel/views/listBooking.dart';
 import 'package:travel/views/listOutPage.dart';
+// ignore: unused_import
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class Add extends StatefulWidget {
@@ -244,7 +248,7 @@ class _AddState extends State<Add> {
                                     if (_formkey.currentState!.validate()) {
                                       // await ListBooking(fromAgentValue, toAgentValue,
                                       //     dateofJourney.text, context);
-                                      
+
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
@@ -254,12 +258,10 @@ class _AddState extends State<Add> {
                                                 ListOutPage(
                                               fromAgentValue: fromAgentValue,
                                               toAgentValue: toAgentValue,
-                                              dateofJourney:
-                                                    dateofJourney.text,
-                                                email: "",
-                                              ),
+                                              dateofJourney: dateofJourney.text,
+                                              email: "",
+                                            ),
                                           ));
-                                      
                                     }
                                   },
                                   child: AnimatedContainer(

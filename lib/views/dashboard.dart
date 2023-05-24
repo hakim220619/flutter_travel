@@ -1,7 +1,10 @@
+// ignore: unused_import
 import 'dart:developer';
+// ignore: unused_import
 import 'dart:ffi';
 
 import 'package:flutter/material.dart';
+// ignore: unused_import
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:travel/views/paypage.dart';
@@ -11,6 +14,7 @@ import 'login.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:travel/views/listBooking.dart';
+// ignore: unused_import
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'cetak_page.dart';
 
@@ -27,6 +31,7 @@ class _DashboardState extends State<Dashboard> {
   static final _client = http.Client();
 
   @override
+  // ignore: override_on_non_overriding_member
   static var _logoutUrl = Uri.parse('https://travel.dlhcode.com/api/logout');
 
   Future Logout() async {
@@ -108,6 +113,7 @@ class _DashboardState extends State<Dashboard> {
                     _showMyDialog('Log Out', 'Are you sure you want to logout?',
                         'No', 'Yes', () async {}, false);
 
+                    // ignore: unused_label
                     child:
                     Text(
                       'Log Out',
@@ -222,6 +228,7 @@ class _MenuState extends State<Menu> {
             if (jsonTransaksi['status_code'] == '200') {
               var updateTransaksi =
                   Uri.parse('https://travel.dlhcode.com/api/updateTransaksi');
+              // ignore: unused_local_variable
               http.Response getOrderId =
                   await _client.post(updateTransaksi, body: {
                 "order_id": orderId,
@@ -236,6 +243,7 @@ class _MenuState extends State<Menu> {
     }
   }
 
+  // ignore: unused_field
   List _getProfile = [];
   Future profile() async {
     try {
@@ -251,10 +259,12 @@ class _MenuState extends State<Menu> {
         "email": email.toString(),
       });
       if (response.statusCode == 200) {
+        // ignore: unused_local_variable
         final data = jsonDecode(response.body);
         SharedPreferences prefs = await SharedPreferences.getInstance();
         var nama = prefs.getString('nama');
         // print(nama);
+        // ignore: unused_local_variable
         var _getProfile = nama.toString();
       }
     } catch (e) {
@@ -319,7 +329,6 @@ class _MenuState extends State<Menu> {
       Container(
         child: SafeArea(
           child: Material(
-           
             child: SingleChildScrollView(
               child: Form(
                 key: _formkey,
