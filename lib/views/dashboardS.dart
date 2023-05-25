@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:travel/views/paypage.dart';
+import 'package:travel/views/tracking_page.dart';
 import 'dart:convert';
 import 'dart:async';
 import 'login.dart';
@@ -111,6 +112,7 @@ class _DashboardSState extends State<DashboardS> {
                     _showMyDialog('Log Out', 'Are you sure you want to logout?',
                         'No', 'Yes', () async {}, false);
 
+                    // ignore: unused_label
                     child:
                     Text(
                       'Log Out',
@@ -149,6 +151,7 @@ class _MenuSState extends State<MenuS> {
 
   static final _client = http.Client();
 
+  // ignore: unused_field
   List _getProfile = [];
   Future profile() async {
     try {
@@ -164,10 +167,12 @@ class _MenuSState extends State<MenuS> {
         "email": email.toString(),
       });
       if (response.statusCode == 200) {
+        // ignore: unused_local_variable
         final data = jsonDecode(response.body);
         SharedPreferences prefs = await SharedPreferences.getInstance();
         var nama = prefs.getString('nama');
         // print(nama);
+        // ignore: unused_local_variable
         var _getProfile = nama.toString();
       }
     } catch (e) {
@@ -218,6 +223,7 @@ class _MenuSState extends State<MenuS> {
   }
 
   var profilePhoto = "http://cdn.onlinewebfonts.com/svg/img_299586.png";
+  // ignore: unused_field
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   String _scanBarcode = 'Unknown';
@@ -227,6 +233,14 @@ class _MenuSState extends State<MenuS> {
     try {
       barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
           '#ff6666', 'Cancel', true, ScanMode.BARCODE);
+      if (barcodeScanRes != false) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (BuildContext context) => TrackingPage(),
+          ),
+        );
+      }
       print(barcodeScanRes);
     } on Exception {
       barcodeScanRes = 'Failed to get platform version.';

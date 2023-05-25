@@ -13,7 +13,6 @@ import 'package:travel/views/welcome.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:math';
 
-
 class HttpService {
   static final _client = http.Client();
 
@@ -26,13 +25,13 @@ class HttpService {
       Uri.parse('https://app.sandbox.midtrans.com/snap/v1/transactions');
 
   static login(email, password, context) async {
+    // ignore: unused_local_variable
     bool isLoading = false;
     http.Response response = await _client.post(_loginUrl, body: {
       "email": email,
       "password": password,
     });
     if (response.statusCode == 200) {
-    
       var jsonUsers = jsonDecode(response.body);
 
       var id_user = jsonUsers['user']['id'];
@@ -172,6 +171,7 @@ class HttpService {
     });
 
     if (response.statusCode == 200) {
+      // ignore: unused_local_variable
       var json = jsonDecode(response.body.toString());
 
       Navigator.push(

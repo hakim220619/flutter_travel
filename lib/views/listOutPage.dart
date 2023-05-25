@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:async';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:travel/views/dashboardS.dart';
 import 'package:travel/views/pesanOutPage.dart';
 
 class ListOutPage extends StatefulWidget {
@@ -65,6 +66,7 @@ class _ListOutPageState extends State<ListOutPage> {
 
   @override
   Widget build(BuildContext context) {
+    // ignore: unused_local_variable
     final List<String> items = List<String>.generate(10000, (i) => '$i');
     return MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -77,7 +79,12 @@ class _ListOutPageState extends State<ListOutPage> {
           centerTitle: true,
           leading: InkWell(
             onTap: () {
-              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (BuildContext context) => DashboardS(),
+                ),
+              );
             },
             child: Icon(
               Icons.arrow_back_ios,

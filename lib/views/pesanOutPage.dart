@@ -29,6 +29,7 @@ class _PesanOutPageState extends State<PesanOutPage> {
   TextEditingController Email = TextEditingController();
   TextEditingController Nohp = TextEditingController();
   @override
+  // ignore: override_on_non_overriding_member
   var nama;
   var email;
   var noHp;

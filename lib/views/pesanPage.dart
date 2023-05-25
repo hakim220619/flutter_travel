@@ -1,3 +1,5 @@
+// ignore_for_file: override_on_non_overriding_member
+
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -6,21 +8,19 @@ import 'package:travel/service/http_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PesanPage extends StatefulWidget {
-  const PesanPage(
-      {Key? key,
+  const PesanPage({
+    Key? key,
     required this.idKey,
-      required this.asalKey,
-      required this.tujuanKey,
+    required this.asalKey,
+    required this.tujuanKey,
     required this.tanggalKey,
     required this.hargaKey,
-  })
-      : super(key: key);
+  }) : super(key: key);
   final String idKey;
   final String asalKey;
   final String tujuanKey;
   final String tanggalKey;
   final String hargaKey;
-
 
   @override
   State<PesanPage> createState() => _PesanPageState();
@@ -38,12 +38,9 @@ class _PesanPageState extends State<PesanPage> {
   var asal;
   var tujuan;
   final _formkey = GlobalKey<FormState>();
-SharedPreferences? preferences;
+  SharedPreferences? preferences;
 
-
- 
   Widget build(BuildContext context) {
-    
     return Scaffold(
       appBar: AppBar(title: Text("Pesan")),
       body: SafeArea(
@@ -85,7 +82,6 @@ SharedPreferences? preferences;
                             height: 10.0,
                           ),
                           TextFormField(
-                            
                             controller: Email,
                             onChanged: (value) {
                               setState(() {
@@ -198,15 +194,12 @@ SharedPreferences? preferences;
                     ),
                   ),
                   InkWell(
-                    
                       onTap: () async {
                         if (_formkey.currentState!.validate()) {
-                        await HttpService.pesan(nama, email, noHp,
-                            widget.idKey,
-                            widget.hargaKey, context);
+                          await HttpService.pesan(nama, email, noHp,
+                              widget.idKey, widget.hargaKey, context);
                         }
                       },
-                      
                       child: Container(
                         margin: const EdgeInsets.symmetric(
                             horizontal: 20, vertical: 10),
