@@ -81,6 +81,7 @@ class _AddState extends State<Add> {
 
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
           appBar: AppBar(
             title: Text("Travel Booking"),

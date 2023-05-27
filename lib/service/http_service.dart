@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:intl/intl.dart';
 import 'package:travel/views/dashboard.dart';
 import 'package:travel/views/dashboardS.dart';
 import 'package:travel/views/listBooking.dart';
@@ -23,6 +24,8 @@ class HttpService {
       Uri.parse('https://travel.dlhcode.com/api/tambah_pemesanan');
   static var _pesanmidtransUrl =
       Uri.parse('https://app.sandbox.midtrans.com/snap/v1/transactions');
+  static var _tracking =
+      Uri.parse('https://travel.dlhcode.com/api/tambah_tracking');
 
   static login(email, password, context) async {
     // ignore: unused_local_variable
@@ -126,6 +129,7 @@ class HttpService {
       "redirect_url": jsonMidtrans['redirect_url'],
     });
     if (response.statusCode == 200) {
+      // ignore: unused_local_variable
       var json = jsonDecode(response.body.toString());
 
       Navigator.push(
@@ -185,6 +189,48 @@ class HttpService {
                     redirect_url: jsonMidtrans['redirect_url'],
                     order_id: number.toString(),
                   )));
+    }
+  }
+
+  static tracking(id_persediaan_tiket, lat_long, nama_lokasi, context) async {
+    var now = new DateTime.now();
+    var formatter = new DateFormat('yyyy-MM-dd');
+    var formatterH = new DateFormat('Hms').format(now);
+    String formattedDate = formatter.format(now);
+
+    // print(formatterH); // 2016-01-25
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    // ignore: unused_local_variable
+    var id_user = preferences.getInt('id_user');
+    var token = preferences.getString('token');
+    // print(id_user);
+    // print(id_persediaan_tiket);
+    // print(lat_long);
+    // print(nama_lokasi);
+
+    http.Response response = await _client.post(_tracking, headers: {
+      "Accept": "application/json",
+      "Authorization": "Bearer " + token.toString(),
+    }, body: {
+      "id_supir": id_user.toString(),
+      "id_persediaan_tiket": id_persediaan_tiket.toString(),
+      "lat_long": lat_long.toString(),
+      "nama_lokasi": nama_lokasi.toString(),
+      "tgl": formattedDate,
+      "jam": formatterH,
+    });
+    if (response.statusCode == 200) {
+      var json = jsonDecode(response.body.toString());
+      // print(json);
+      if (json == 'username already exist') {
+        await EasyLoading.showError(json);
+      } else {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => DashboardS()));
+      }
+    } else {
+      await EasyLoading.showError(
+          "Error Code : ${response.statusCode.toString()}");
     }
   }
 }

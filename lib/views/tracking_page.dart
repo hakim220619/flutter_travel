@@ -3,10 +3,13 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:travel/service/http_service.dart';
 
 class TrackingPage extends StatefulWidget {
-  const TrackingPage({super.key, required this.lokasi});
+  const TrackingPage(
+      {super.key, required this.lokasi, required this.namaSupir});
   final String lokasi;
+  final String namaSupir;
   @override
   State<TrackingPage> createState() => _TrackingPageState();
 }
@@ -14,6 +17,11 @@ class TrackingPage extends StatefulWidget {
 final _formkey = GlobalKey<FormState>();
 List fromAgent = [];
 var Getnama;
+var lat_long;
+var id_persediaan_tiket;
+var nama_lokasi;
+var nama;
+var namaLokasi;
 
 class _TrackingPageState extends State<TrackingPage> {
   TextEditingController NamaLokasi = TextEditingController();
@@ -32,29 +40,17 @@ class _TrackingPageState extends State<TrackingPage> {
           fromAgent = jsonData['data'];
           // ignore: unused_local_variable
 
-          // print(Getnama);
+          print(fromAgent);
         });
       }
     }
 
-    var toAgentValue;
-
-    _loadCounter() async {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      setState(() {
-        Getnama = prefs.getString('nama');
-        // print(Getnama.toString());
-      });
-    }
-
     // ignore: unused_local_variable
-    var nama;
-    var namaLokasi;
 
     void initState() async {
       super.initState();
       getagentFrom();
-      _loadCounter();
+      // _loadCounter();
     }
 
     Future refresh() async {
@@ -64,7 +60,7 @@ class _TrackingPageState extends State<TrackingPage> {
       setState(() {
         getagentFrom();
         // ignore: unused_local_variable, non_constant_identifier_names
-        _loadCounter();
+        // _loadCounter();
         // print(Getnama);
       });
     }
@@ -100,15 +96,6 @@ class _TrackingPageState extends State<TrackingPage> {
                         child: Container(
                           child: Column(
                             children: [
-                              Container(
-                                alignment: Alignment.topLeft,
-                                child: Text(
-                                  "Perjalanan :",
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                  ),
-                                ),
-                              ),
                               Padding(
                                 padding: EdgeInsets.all(8.0),
                                 child: DropdownButtonFormField(
@@ -130,23 +117,23 @@ class _TrackingPageState extends State<TrackingPage> {
                                   }).toList(),
                                   validator: (value) {
                                     if (value == false)
-                                      return 'Silahkan Masukan Perjalanan';
-                                    return null;
+                                      // return 'Silahkan Masukan Perjalanan';
+                                      return null;
                                   },
                                   onChanged: (newVal) {
-                                    setState(() {
-                                      toAgentValue = newVal;
+                                    setState(() async {
+                                      id_persediaan_tiket = newVal;
                                       // print(fromAgent[index]['id']);
+                                      // print(newVal);
                                     });
                                   },
-                                  value: toAgentValue,
+                                  value: id_persediaan_tiket,
                                 ),
                               ),
                               Padding(
                                 padding: EdgeInsets.all(8.0),
                                 child: TextFormField(
                                   initialValue: '$Getnama',
-                                  controller: nama,
                                   readOnly: true,
                                   onChanged: (value) {
                                     setState(() async {
@@ -167,7 +154,6 @@ class _TrackingPageState extends State<TrackingPage> {
                                     if (value!.isEmpty) {
                                       return "Nama tidak boleh kosong";
                                     }
-                                    return null;
                                   },
                                 ),
                               ),
@@ -175,13 +161,12 @@ class _TrackingPageState extends State<TrackingPage> {
                                 padding: EdgeInsets.all(8.0),
                                 child: TextFormField(
                                   initialValue: widget.lokasi,
-                                  controller: nama,
                                   readOnly: true,
                                   onChanged: (value) {
                                     setState(() async {
                                       // ignore: unused_local_variable
-                                      // print('$Getnama');
-                                      Getnama = value;
+                                      // print(value);
+                                      lat_long = value;
                                     });
                                   },
                                   decoration: InputDecoration(
@@ -207,10 +192,10 @@ class _TrackingPageState extends State<TrackingPage> {
                                   controller: NamaLokasi,
                                   readOnly: false,
                                   onChanged: (value) {
-                                    setState(() async {
+                                    setState(() {
                                       // ignore: unused_local_variable
-                                      // print('$Getnama');
-                                      namaLokasi = value;
+                                      // print(nama_lokasi);
+                                      nama_lokasi = value;
                                     });
                                   },
                                   decoration: InputDecoration(
@@ -238,9 +223,13 @@ class _TrackingPageState extends State<TrackingPage> {
                       ),
                       InkWell(
                           onTap: () async {
+                            // print(nama_lokasi);
                             if (_formkey.currentState!.validate()) {
-                              // await HttpService.pesanOut(nama, email, noHp,
-                              //     widget.idKey, widget.hargaKey, context);
+                              await HttpService.tracking(
+                                  id_persediaan_tiket.toString(),
+                                  widget.lokasi.toString(),
+                                  nama_lokasi.toString(),
+                                  context);
                             }
                           },
                           child: Container(

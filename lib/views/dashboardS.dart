@@ -29,6 +29,7 @@ class _DashboardSState extends State<DashboardS> {
   static final _client = http.Client();
 
   @override
+  // ignore: override_on_non_overriding_member
   static var _logoutUrl = Uri.parse('https://travel.dlhcode.com/api/logout');
 
   Future Logout() async {
@@ -84,7 +85,7 @@ class _DashboardSState extends State<DashboardS> {
             TextButton(
               child: Text(nobutton),
               onPressed: () {
-                onTap();
+                Navigator.pop(context);
               },
             ),
             TextButton(
@@ -101,6 +102,7 @@ class _DashboardSState extends State<DashboardS> {
 
   Widget build(BuildContext context) {
     return MaterialApp(
+        debugShowCheckedModeBanner: false,
         home: Scaffold(
             appBar: AppBar(
               centerTitle: true,
@@ -192,12 +194,38 @@ class _MenuSState extends State<MenuS> {
         });
   }
 
+  List _get = [];
+  Future riwayatTracking() async {
+    try {
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      var id_user = preferences.getInt('id_user');
+      var _riwayatTiket =
+          Uri.parse('https://travel.dlhcode.com/api/tracking_by_id_supir');
+      http.Response response = await _client.post(_riwayatTiket, headers: {
+        "Accept": "application/json",
+      }, body: {
+        "id": id_user.toString(),
+      });
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+
+        setState(() {
+          _get = data['data'];
+          print(_get);
+        });
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
 
       profile();
       loginStatus();
+      riwayatTracking();
     });
   }
 
@@ -214,6 +242,7 @@ class _MenuSState extends State<MenuS> {
     super.initState();
     profile();
     loginStatus();
+    riwayatTracking();
   }
 
   @override
@@ -222,12 +251,26 @@ class _MenuSState extends State<MenuS> {
     super.dispose();
   }
 
+  Future refresh() async {
+    // ignore: unused_local_variable
+
+    // print(nama.toString());
+    setState(() {
+      riwayatTracking();
+      // ignore: unused_local_variable, non_constant_identifier_names
+      // _loadCounter();
+      // print(Getnama);
+    });
+  }
+
   var profilePhoto = "http://cdn.onlinewebfonts.com/svg/img_299586.png";
   // ignore: unused_field
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   String _scanBarcode = 'Unknown';
   Future<void> scanBarcodeNormal() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    Getnama = prefs.getString('nama');
     String barcodeScanRes;
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
@@ -237,8 +280,8 @@ class _MenuSState extends State<MenuS> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (BuildContext context) =>
-                TrackingPage(lokasi: _scanBarcode),
+            builder: (BuildContext context) => TrackingPage(
+                lokasi: _scanBarcode, namaSupir: Getnama.toString()),
           ),
         );
       }
@@ -247,15 +290,14 @@ class _MenuSState extends State<MenuS> {
       barcodeScanRes = 'Failed to get platform version.';
     }
 
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
     if (!mounted) return;
 
     setState(() {
       _scanBarcode = barcodeScanRes;
     });
   }
+
+  // ignore: override_on_non_overriding_member
 
   @override
   Widget build(BuildContext context) {
@@ -276,8 +318,70 @@ class _MenuSState extends State<MenuS> {
           ),
         ),
       ),
-      Column(
-        children: [],
+      Center(
+        child: RefreshIndicator(
+          onRefresh: refresh,
+          child: ListView.builder(
+            itemCount: _get.length,
+            itemBuilder: (context, index) => Card(
+              margin: const EdgeInsets.all(10),
+              elevation: 8,
+              child: ListTile(
+                leading: CircleAvatar(
+                  backgroundColor: Color.fromARGB(255, 48, 31, 83),
+                  child: Icon(
+                    Icons.directions_car,
+                    color: Colors.white,
+                  ),
+                ),
+                title: Text(
+                  "Dari " +
+                      _get[index]['nama_kota'].toString() +
+                      ' | ' +
+                      _get[index]['tujuan'].toString(),
+                  style: new TextStyle(
+                      fontSize: 15.0, fontWeight: FontWeight.bold),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                subtitle: Text(
+                  _get[index]['lat_long'].toString(),
+                  maxLines: 2,
+                  style: new TextStyle(fontSize: 14.0),
+                  overflow: TextOverflow.ellipsis,
+                ),
+                trailing: Text(
+                  _get[index]['tgl'].toString(),
+                ),
+                // onTap: () {
+                //   Navigator.push(
+                //       context,
+                //       MaterialPageRoute(
+                //           builder: (context) => TicketData(
+                //                 order_id: _get[index]['order_id'].toString(),
+                //                 nama: _get[index]['nama_pemesan'].toString(),
+                //                 tanggal:
+                //                     _get[index]['tgl_keberangkatan'].toString(),
+                //                 email: _get[index]['email'].toString(),
+                //                 no_hp: _get[index]['no_hp'].toString(),
+                //                 status: _get[index]['status'].toString(),
+                //               )));
+
+                //   Navigator.push(
+                //       context,
+                //       MaterialPageRoute(
+                //           builder: (context) => payPage(
+                //               nama: _get[index]['nama_pemesan'].toString(),
+                //               email: _get[index]['email'].toString(),
+                //               no_hp: _get[index]['no_hp'].toString(),
+                //               status: _get[index]['status'].toString(),
+                //               redirect_url:
+                //                   _get[index]['redirect_url'].toString())));
+                // },
+              ),
+            ),
+          ),
+        ),
       ),
       Column(
         children: [
@@ -357,30 +461,33 @@ class _MenuSState extends State<MenuS> {
       ),
     ];
 
-    return Scaffold(
-      body: Center(
-        child: _widgetOptions.elementAt(
-          _selectedIndex,
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        body: Center(
+          child: _widgetOptions.elementAt(
+            _selectedIndex,
+          ),
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Scan',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.business),
-            label: 'Riwayat',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.school),
-            label: 'Profile',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.amber[800],
-        onTap: _onItemTapped,
+        bottomNavigationBar: BottomNavigationBar(
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'Scan',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.business),
+              label: 'Riwayat',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.school),
+              label: 'Profile',
+            ),
+          ],
+          currentIndex: _selectedIndex,
+          selectedItemColor: Colors.amber[800],
+          onTap: _onItemTapped,
+        ),
       ),
     );
   }
