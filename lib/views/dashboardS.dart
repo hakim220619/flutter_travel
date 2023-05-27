@@ -237,7 +237,8 @@ class _MenuSState extends State<MenuS> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (BuildContext context) => TrackingPage(),
+            builder: (BuildContext context) =>
+                TrackingPage(lokasi: _scanBarcode),
           ),
         );
       }

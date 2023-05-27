@@ -45,7 +45,7 @@ class _ListBookingState extends State<ListBooking> {
 
         setState(() {
           _get = data['data'];
-          print(_get.first['kuota'] == '1');
+          // print(_get.first['kuota'] == '1');
         });
       }
     } catch (e) {
