@@ -3,6 +3,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:travel/views/dashboard.dart';
 import 'package:url_launcher/url_launcher.dart';
+// ignore: unused_import
 import 'package:shared_preferences/shared_preferences.dart';
 // import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 

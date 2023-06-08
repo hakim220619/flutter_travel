@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:async';
+// ignore: unused_import
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:travel/service/http_service.dart';
 
