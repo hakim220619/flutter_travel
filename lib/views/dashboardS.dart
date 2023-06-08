@@ -199,6 +199,7 @@ class _MenuSState extends State<MenuS> {
     try {
       SharedPreferences preferences = await SharedPreferences.getInstance();
       var id_user = preferences.getInt('id_user');
+      // print(id_user);
       var _riwayatTiket =
           Uri.parse('https://travel.dlhcode.com/api/tracking_by_id_supir');
       http.Response response = await _client.post(_riwayatTiket, headers: {
@@ -206,12 +207,13 @@ class _MenuSState extends State<MenuS> {
       }, body: {
         "id": id_user.toString(),
       });
+      // print(response.body);
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
 
         setState(() {
           _get = data['data'];
-          print(_get);
+          // print(_get);
         });
       }
     } catch (e) {

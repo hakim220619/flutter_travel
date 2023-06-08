@@ -50,6 +50,7 @@ class _TiketPageState extends State<TiketPage> {
             Container(
               padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
               child: TextFormField(
+                keyboardType: TextInputType.number,
                 obscureText: false,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
