@@ -7,17 +7,16 @@ import 'dart:async';
 // ignore: unused_import
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:travel/views/pesanPage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ListBooking extends StatefulWidget {
   const ListBooking(
       {Key? key,
-      required this.fromAgentValue,
-      required this.toAgentValue,
+      // required this.rute,
       required this.dateofJourney,
       required this.email})
       : super(key: key);
-  final String fromAgentValue;
-  final String toAgentValue;
+  // final String rute;
   final String dateofJourney;
   final String email;
   @override
@@ -30,21 +29,30 @@ class _ListBookingState extends State<ListBooking> {
   var asal;
   var tujuan;
   Future search() async {
+
     try {
+       SharedPreferences preferences = await SharedPreferences.getInstance();
+    // ignore: unused_local_variable
+    var id_user = preferences.getInt('id_user');
+    var token = preferences.getString('token');
       // print({widget.fromAgentValue});
       var _SearchUrl =
-          Uri.parse('https://travel.dlhcode.com/api/cek_persediaan_tiket');
-      http.Response response = await _client.post(_SearchUrl, body: {
-        "asal": widget.fromAgentValue,
-        "tujuan": widget.toAgentValue,
+          Uri.parse('https://travel.dlhcode.com/api/jadwal_keberangkatan');
+      http.Response response = await _client.post(_SearchUrl, headers: {
+      "Accept": "application/json",
+      "Authorization": "Bearer " + token.toString(),
+    }, body: {
+        "id_rute": "1",
         "tgl_keberangkatan": widget.dateofJourney,
       });
-// print(response.reasonPhrase);
+// print(response.body);
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
 
         setState(() {
           _get = data['data'];
+          id_user = id_user;
+          // print(id_user);
           // print(_get.first['kuota'] == '1');
         });
       }
@@ -101,7 +109,7 @@ class _ListBookingState extends State<ListBooking> {
                     child: Icon(Icons.directions_car),
                   ),
                   title: Text(
-                    _get[index]['asal'] + ' | ' + _get[index]['tujuan'],
+                    _get[index]['keberangkatan'] + ' | ' + _get[index]['tujuan'],
                     style: new TextStyle(fontSize: 18.0),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -114,7 +122,7 @@ class _ListBookingState extends State<ListBooking> {
                   ),
                   onTap: () {
                     // print(_get.first['kuota']);
-                    if (_get.first['kuota'] != '0') {
+                    if (_get.first['stok_tiket'] != '0') {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -122,7 +130,7 @@ class _ListBookingState extends State<ListBooking> {
                               context,
                             ) =>
                                 PesanPage(
-                              asalKey: _get[index]['asal'],
+                              asalKey: _get[index]['keberangkatan'],
                               tujuanKey: _get[index]['tujuan'],
                               idKey: _get[index]['id'],
                               hargaKey: _get[index]['harga'],

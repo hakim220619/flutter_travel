@@ -141,7 +141,7 @@ String? onclick;
 bool seepwd = false;
 
 @override
-var fromAgentValue;
+// var tofromRute;
 var toAgentValue;
 bool changebutton = false;
 
@@ -149,8 +149,8 @@ bool changebutton = false;
 class _MenuState extends State<Menu> {
   TextEditingController dateofJourney = TextEditingController();
   int _selectedIndex = 0;
-  var fromAgentValue;
-  List fromAgent = [];
+  var tofromRute;
+  List getRute = [];
   List _get = [];
   static final _client = http.Client();
   var asal;
@@ -158,13 +158,13 @@ class _MenuState extends State<Menu> {
   var FixLunas;
 
   //Future
-  Future getagentFrom() async {
+  Future Rute() async {
     var baseUrl = "https://travel.dlhcode.com/api/tempat_agen";
     http.Response response = await http.get(Uri.parse(baseUrl));
     if (response.statusCode == 200) {
       var jsonData = json.decode(response.body);
       setState(() {
-        fromAgent = jsonData['data'];
+        getRute = jsonData['data'];
       });
     }
   }
@@ -287,8 +287,8 @@ class _MenuState extends State<Menu> {
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
-      getagentFrom();
-      getagentTo();
+      Rute();
+      // getagentTo();
       riwayatTiket();
       profile();
       loginStatus();
@@ -306,8 +306,8 @@ class _MenuState extends State<Menu> {
   @override
   void initState() {
     super.initState();
-    getagentFrom();
-    getagentTo();
+    Rute();
+    // getagentTo();
     riwayatTiket();
     profile();
     loginStatus();
@@ -344,77 +344,41 @@ class _MenuState extends State<Menu> {
                         Container(
                           alignment: Alignment.topLeft,
                           child: Text(
-                            "Dari :",
+                            "Rute :",
                             style: TextStyle(
                                 fontSize: 18, fontWeight: FontWeight.bold),
                           ),
                         ),
-                        Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: DropdownButtonFormField(
-                            decoration: InputDecoration(
-                                fillColor: Colors.grey.shade100,
-                                filled: true,
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10)),
-                                hintText: 'Titik Penjemputan'),
-                            isExpanded: true,
-                            items: fromAgent.map((item) {
-                              return DropdownMenuItem(
-                                value: item['id'].toString(),
-                                child: Text(item['tempat_agen'].toString()),
-                              );
-                            }).toList(),
-                            validator: (value) {
-                              if (value == null)
-                                return 'Silahkan Masukan Tempat';
-                              return null;
-                            },
-                            value: fromAgentValue,
-                            onChanged: (newVal) {
-                              setState(() {
-                                fromAgentValue = newVal;
-                              });
-                            },
-                          ),
-                        ),
-                        Container(
-                          alignment: Alignment.topLeft,
-                          child: Text(
-                            "Tujuan :",
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: DropdownButtonFormField(
-                            decoration: InputDecoration(
-                                fillColor: Colors.grey.shade100,
-                                filled: true,
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10)),
-                                hintText: 'Pilih Tujuan'),
-                            isExpanded: true,
-                            items: fromAgent.map((item) {
-                              return DropdownMenuItem(
-                                value: item['id'].toString(),
-                                child: Text(item['tempat_agen'].toString()),
-                              );
-                            }).toList(),
-                            validator: (value) {
-                              if (value == false)
-                                return 'Silahkan Masukan Tempat';
-                              return null;
-                            },
-                            onChanged: (newVal) {
-                              setState(() {
-                                toAgentValue = newVal;
-                              });
-                            },
-                            value: toAgentValue,
-                          ),
-                        ),
+                        // Padding(
+                        //   padding: EdgeInsets.all(8.0),
+                        //   child: DropdownButtonFormField(
+                        //     decoration: InputDecoration(
+                        //         fillColor: Colors.grey.shade100,
+                        //         filled: true,
+                        //         border: OutlineInputBorder(
+                        //             borderRadius: BorderRadius.circular(10)),
+                        //         hintText: 'Titik Penjemputan'),
+                        //     isExpanded: true,
+                        //     items: getRute.map((item) {
+                        //       return DropdownMenuItem(
+                        //         value: item['id'].toString(),
+                        //         child: Text(item['tempat_agen'].toString()),
+                        //       );
+                        //     }).toList(),
+                        //     validator: (value) {
+                        //       if (value == null)
+                        //         return 'Silahkan Masukan Tempat';
+                        //       return null;
+                        //     },
+                        //     value: tofromRute,
+                        //     onChanged: (newVal) {
+                        //       setState(() {
+                        //         tofromRute = newVal;
+                        //       });
+                        //     },
+                        //   ),
+                        // ),
+                        
 
                         Container(
                           alignment: Alignment.topLeft,
@@ -470,7 +434,7 @@ class _MenuState extends State<Menu> {
                               changebutton = true;
                             });
                             if (_formkey.currentState!.validate()) {
-                              // await ListBooking(fromAgentValue, toAgentValue,
+                              // await ListBooking(tofromRute,
                               //     dateofJourney.text, context);
                               Navigator.push(
                                   context,
@@ -479,8 +443,8 @@ class _MenuState extends State<Menu> {
                                       context,
                                     ) =>
                                         ListBooking(
-                                            fromAgentValue: fromAgentValue,
-                                            toAgentValue: toAgentValue,
+                                            // tofromRute: 1,
+                                            // toAgentValue: toAgentValue,
                                             dateofJourney: dateofJourney.text,
                                             email: email.toString()),
                                   ));

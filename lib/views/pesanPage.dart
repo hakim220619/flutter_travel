@@ -6,6 +6,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:travel/service/http_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:intl/intl.dart';
 
 class PesanPage extends StatefulWidget {
   const PesanPage({
@@ -27,20 +28,35 @@ class PesanPage extends StatefulWidget {
 }
 
 class _PesanPageState extends State<PesanPage> {
-  TextEditingController Nama = TextEditingController();
-  TextEditingController Email = TextEditingController();
-  TextEditingController Nohp = TextEditingController();
+  TextEditingController Nama = TextEditingController(text: '');
+  TextEditingController Email = TextEditingController(text: '');
+  TextEditingController Nohp = TextEditingController(text: '');
   @override
-  var nama;
-  var email;
-  var noHp;
   var tanggal;
   var asal;
   var tujuan;
   final _formkey = GlobalKey<FormState>();
   SharedPreferences? preferences;
 
+
   Widget build(BuildContext context) {
+ void loginStatus() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    var nama = prefs.getString('nama');
+    var email = prefs.getString('email');
+    var nohp = prefs.getString('no_hp');
+    
+    setState(() => {
+          Nama.text = nama.toString(),
+          Email.text = email.toString(),
+          Nohp.text = nohp.toString()
+          
+        });
+  }
+  void initState() {
+    super.initState();
+    loginStatus();
+  }
     return Scaffold(
       appBar: AppBar(title: Text("Pesan")),
       body: SafeArea(
@@ -61,7 +77,7 @@ class _PesanPageState extends State<PesanPage> {
                             controller: Nama,
                             onChanged: (value) {
                               setState(() {
-                                nama = value;
+                                Nama.text = value;
                               });
                             },
                             decoration: InputDecoration(
@@ -82,10 +98,10 @@ class _PesanPageState extends State<PesanPage> {
                             height: 10.0,
                           ),
                           TextFormField(
-                            controller: Email,
+                           controller: Email,
                             onChanged: (value) {
                               setState(() {
-                                email = value;
+                                Email.text = value;
                               });
                             },
                             decoration: InputDecoration(
@@ -109,7 +125,7 @@ class _PesanPageState extends State<PesanPage> {
                             controller: Nohp,
                             onChanged: (value) {
                               setState(() {
-                                noHp = value;
+                                Nohp.text = value;
                               });
                             },
                             decoration: InputDecoration(
@@ -196,7 +212,7 @@ class _PesanPageState extends State<PesanPage> {
                   InkWell(
                       onTap: () async {
                         if (_formkey.currentState!.validate()) {
-                          await HttpService.pesan(nama, email, noHp,
+                          await HttpService.pesan(Nama, Email, Nohp,
                               widget.idKey, widget.hargaKey, context);
                         }
                       },
