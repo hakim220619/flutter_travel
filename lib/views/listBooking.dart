@@ -12,11 +12,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 class ListBooking extends StatefulWidget {
   const ListBooking(
       {Key? key,
-      // required this.rute,
+      required this.rute,
       required this.dateofJourney,
       required this.email})
       : super(key: key);
-  // final String rute;
+  final String rute;
   final String dateofJourney;
   final String email;
   @override
@@ -42,7 +42,7 @@ class _ListBookingState extends State<ListBooking> {
       "Accept": "application/json",
       "Authorization": "Bearer " + token.toString(),
     }, body: {
-        "id_rute": "1",
+        "id_rute": widget.rute,
         "tgl_keberangkatan": widget.dateofJourney,
       });
 // print(response.body);
@@ -51,7 +51,7 @@ class _ListBookingState extends State<ListBooking> {
 
         setState(() {
           _get = data['data'];
-          id_user = id_user;
+          // id_user = id_user;
           // print(id_user);
           // print(_get.first['kuota'] == '1');
         });

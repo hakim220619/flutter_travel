@@ -96,10 +96,13 @@ class HttpService {
     }
   }
 
-  static pesan(nama, email, noHp, id_persediaan_tiket, harga, context) async {
+  static pesan(id_jadwal, harga, context) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var id_user = prefs.getInt('id_user');
-
+    var nama = prefs.getString('nama');
+    var email = prefs.getString('email');
+    var no_hp = prefs.getString('no_hp');
+    var token = prefs.getString('token');
     Random objectname = Random();
     int number = objectname.nextInt(10000000);
     String username = 'SB-Mid-server-z5T9WhivZDuXrJxC7w-civ_k';
@@ -118,16 +121,20 @@ class HttpService {
         }));
     var jsonMidtrans = jsonDecode(responseMidtrans.body.toString());
 
-    http.Response response = await _client.post(_pesanUrl, body: {
-      "id_persediaan_tiket": id_persediaan_tiket,
+    http.Response response = await _client.post(_pesanUrl, headers: {
+      "Accept": "application/json",
+      "Authorization": "Bearer " + token.toString(),
+    }, body: {
+      "id_jadwal": id_jadwal,
       "id_user": id_user.toString(),
-      "nama_pemesan": nama,
-      "email": email,
-      "no_hp": noHp,
+      "nama_pemesan": nama.toString(),
+      "email": email.toString(),
+      "no_hp": no_hp.toString(),
       "status": "belum bayar",
       "order_id": number.toString(),
       "redirect_url": jsonMidtrans['redirect_url'],
     });
+    print(response.body);
     if (response.statusCode == 200) {
       // ignore: unused_local_variable
       var json = jsonDecode(response.body.toString());
@@ -136,9 +143,9 @@ class HttpService {
           context,
           MaterialPageRoute(
               builder: (context) => payPage(
-                  nama: nama,
-                  email: email,
-                  no_hp: noHp,
+                  nama: nama.toString(),
+                  email: email.toString(),
+                  no_hp: no_hp.toString(),
                   status: "belum bayar",
                   redirect_url: jsonMidtrans['redirect_url'])));
     }

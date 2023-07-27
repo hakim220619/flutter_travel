@@ -73,75 +73,6 @@ class _PesanPageState extends State<PesanPage> {
                     child: Container(
                       child: Column(
                         children: [
-                          TextFormField(
-                            controller: Nama,
-                            onChanged: (value) {
-                              setState(() {
-                                Nama.text = value;
-                              });
-                            },
-                            decoration: InputDecoration(
-                                fillColor: Colors.grey.shade100,
-                                filled: true,
-                                hintText: "Masukan Nama Lengkap",
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10)),
-                                labelText: "Nama"),
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return "Nama tidak boleh kosong";
-                              }
-                              return null;
-                            },
-                          ),
-                          SizedBox(
-                            height: 10.0,
-                          ),
-                          TextFormField(
-                           controller: Email,
-                            onChanged: (value) {
-                              setState(() {
-                                Email.text = value;
-                              });
-                            },
-                            decoration: InputDecoration(
-                                fillColor: Colors.grey.shade100,
-                                filled: true,
-                                hintText: "Masukan Email",
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10)),
-                                labelText: "Email"),
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return "Email tidak boleh kosong";
-                              }
-                              return null;
-                            },
-                          ),
-                          SizedBox(
-                            height: 10.0,
-                          ),
-                          TextFormField(
-                            controller: Nohp,
-                            onChanged: (value) {
-                              setState(() {
-                                Nohp.text = value;
-                              });
-                            },
-                            decoration: InputDecoration(
-                                fillColor: Colors.grey.shade100,
-                                filled: true,
-                                hintText: "Masukan Nomor Hp",
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10)),
-                                labelText: "Nomor Hp"),
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return "Nomor Hp tidak boleh kosong";
-                              }
-                              return null;
-                            },
-                          ),
                           SizedBox(
                             height: 10.0,
                           ),
@@ -212,7 +143,7 @@ class _PesanPageState extends State<PesanPage> {
                   InkWell(
                       onTap: () async {
                         if (_formkey.currentState!.validate()) {
-                          await HttpService.pesan(Nama, Email, Nohp,
+                          await HttpService.pesan(
                               widget.idKey, widget.hargaKey, context);
                         }
                       },
@@ -221,7 +152,7 @@ class _PesanPageState extends State<PesanPage> {
                             horizontal: 20, vertical: 10),
                         child: const Center(
                           child: Text(
-                            "Bayar",
+                            "Pesan",
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.white),

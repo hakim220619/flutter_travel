@@ -171,21 +171,21 @@ class _LoginPageState extends State<LoginPage> {
                     },
                     child: const Text('Cetak Tiket'),
                   ),
-                  ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(
-                          Color.fromARGB(255, 231, 3, 3)),
-                    ),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const Add(),
-                        ),
-                      );
-                    },
-                    child: const Text('Pesan Tiket'),
-                  ),
+                  // ElevatedButton(
+                  //   style: ButtonStyle(
+                  //     backgroundColor: MaterialStateProperty.all(
+                  //         Color.fromARGB(255, 231, 3, 3)),
+                  //   ),
+                  //   onPressed: () {
+                  //     Navigator.push(
+                  //       context,
+                  //       MaterialPageRoute(
+                  //         builder: (context) => const Add(),
+                  //       ),
+                  //     );
+                  //   },
+                  //   child: const Text('Pesan Tiket'),
+                  // ),
                 ],
               ),
             ],

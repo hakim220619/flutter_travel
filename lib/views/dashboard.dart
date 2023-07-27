@@ -92,6 +92,7 @@ class _DashboardState extends State<Dashboard> {
               child: Text(yesbutton),
               onPressed: () async {
                 Logout();
+                Navigator.of(context, rootNavigator: true).pop('dialog');
               },
             ),
           ],
@@ -102,8 +103,11 @@ class _DashboardState extends State<Dashboard> {
 
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
         home: Scaffold(
+          
             appBar: AppBar(
+              
               centerTitle: true,
               title: Text("Travel"),
               actions: [
@@ -159,7 +163,7 @@ class _MenuState extends State<Menu> {
 
   //Future
   Future Rute() async {
-    var baseUrl = "https://travel.dlhcode.com/api/tempat_agen";
+    var baseUrl = "https://travel.dlhcode.com/api/rute";
     http.Response response = await http.get(Uri.parse(baseUrl));
     if (response.statusCode == 200) {
       var jsonData = json.decode(response.body);
@@ -169,28 +173,30 @@ class _MenuState extends State<Menu> {
     }
   }
 
-  List toAgent = [];
-  Future getagentTo() async {
-    var baseUrl = "https://travel.dlhcode.com/api/tempat_agen";
-    http.Response response = await http.get(Uri.parse(baseUrl));
-    if (response.statusCode == 200) {
-      var jsonData = json.decode(response.body);
+  // List toAgent = [];
+  // Future getagentTo() async {
+  //   var baseUrl = "https://travel.dlhcode.com/api/tempat_agen";
+  //   http.Response response = await http.get(Uri.parse(baseUrl));
+  //   if (response.statusCode == 200) {
+  //     var jsonData = json.decode(response.body);
 
-      setState(() {
-        toAgent = jsonData['data'];
-      });
-    }
-  }
+  //     setState(() {
+  //       toAgent = jsonData['data'];
+  //     });
+  //   }
+  // }
 
   Future riwayatTiket() async {
     try {
       SharedPreferences preferences = await SharedPreferences.getInstance();
-      var email = preferences.getString('email');
       var id_user = preferences.getInt('id_user');
+      var token = preferences.getString('token');
       var _riwayatTiket =
           Uri.parse('https://travel.dlhcode.com/api/riwayat_tiket');
-      http.Response response = await _client.post(_riwayatTiket, body: {
-        "email": email,
+      http.Response response = await _client.post(_riwayatTiket, headers: {
+        "Accept": "application/json",
+        "Authorization": "Bearer " + token.toString(),
+      }, body: {
         "id_user": id_user.toString(),
       });
       if (response.statusCode == 200) {
@@ -198,6 +204,7 @@ class _MenuState extends State<Menu> {
 
         setState(() {
           _get = data['data'];
+          // print(_get);
         });
         var _orderid =
             Uri.parse('https://travel.dlhcode.com/api/cek_transaksi');
@@ -349,36 +356,36 @@ class _MenuState extends State<Menu> {
                                 fontSize: 18, fontWeight: FontWeight.bold),
                           ),
                         ),
-                        // Padding(
-                        //   padding: EdgeInsets.all(8.0),
-                        //   child: DropdownButtonFormField(
-                        //     decoration: InputDecoration(
-                        //         fillColor: Colors.grey.shade100,
-                        //         filled: true,
-                        //         border: OutlineInputBorder(
-                        //             borderRadius: BorderRadius.circular(10)),
-                        //         hintText: 'Titik Penjemputan'),
-                        //     isExpanded: true,
-                        //     items: getRute.map((item) {
-                        //       return DropdownMenuItem(
-                        //         value: item['id'].toString(),
-                        //         child: Text(item['tempat_agen'].toString()),
-                        //       );
-                        //     }).toList(),
-                        //     validator: (value) {
-                        //       if (value == null)
-                        //         return 'Silahkan Masukan Tempat';
-                        //       return null;
-                        //     },
-                        //     value: tofromRute,
-                        //     onChanged: (newVal) {
-                        //       setState(() {
-                        //         tofromRute = newVal;
-                        //       });
-                        //     },
-                        //   ),
-                        // ),
-                        
+                        Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: DropdownButtonFormField(
+                            decoration: InputDecoration(
+                                fillColor: Colors.grey.shade100,
+                                filled: true,
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10)),
+                                hintText: 'Titik Penjemputan'),
+                            isExpanded: true,
+                            items: getRute.map((item) {
+                              return DropdownMenuItem(
+                                  value: item['id'].toString(),
+                                  child: Text(item['keberangkatan'].toString() +
+                                      ' - ' +
+                                      item['tujuan'].toString()));
+                            }).toList(),
+                            validator: (value) {
+                              if (value == null)
+                                return 'Silahkan Masukan Tempat';
+                              return null;
+                            },
+                            value: tofromRute,
+                            onChanged: (newVal) {
+                              setState(() {
+                                tofromRute = newVal;
+                              });
+                            },
+                          ),
+                        ),
 
                         Container(
                           alignment: Alignment.topLeft,
@@ -444,7 +451,7 @@ class _MenuState extends State<Menu> {
                                     ) =>
                                         ListBooking(
                                             // tofromRute: 1,
-                                            // toAgentValue: toAgentValue,
+                                            rute: tofromRute.toString(),
                                             dateofJourney: dateofJourney.text,
                                             email: email.toString()),
                                   ));
@@ -496,7 +503,10 @@ class _MenuState extends State<Menu> {
                   ),
                 ),
                 title: Text(
-                  "Dari " + _get[index]['asal'] + ' | ' + _get[index]['tujuan'],
+                  "Dari " +
+                      _get[index]['keberangkatan'] +
+                      ' | ' +
+                      _get[index]['tujuan'],
                   style: new TextStyle(
                       fontSize: 15.0, fontWeight: FontWeight.bold),
                   maxLines: 1,
@@ -517,28 +527,32 @@ class _MenuState extends State<Menu> {
                 onTap: () {
                   if (_get[index]['status'] == 'lunas') {
                     Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => TicketData(
-                                  order_id: _get[index]['order_id'].toString(),
-                                  nama: _get[index]['nama_pemesan'].toString(),
-                                  tanggal: _get[index]['tgl_keberangkatan']
-                                      .toString(),
-                                  email: _get[index]['email'].toString(),
-                                  no_hp: _get[index]['no_hp'].toString(),
-                                  status: _get[index]['status'].toString(),
-                                )));
+                      context,
+                      MaterialPageRoute(
+                        builder: (BuildContext context) => TicketData(
+                          order_id: _get[index]['order_id'].toString(),
+                          nama: _get[index]['nama_pemesan'].toString(),
+                          tanggal: _get[index]['tgl_keberangkatan'].toString(),
+                          email: _get[index]['email'].toString(),
+                          no_hp: _get[index]['no_hp'].toString(),
+                          status: _get[index]['status'].toString(),
+                        ),
+                      ),
+                     
+                    );
                   } else {
                     Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => payPage(
-                                nama: _get[index]['nama_pemesan'].toString(),
-                                email: _get[index]['email'].toString(),
-                                no_hp: _get[index]['no_hp'].toString(),
-                                status: _get[index]['status'].toString(),
-                                redirect_url:
-                                    _get[index]['redirect_url'].toString())));
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext context) => payPage(
+                              nama: _get[index]['nama_pemesan'].toString(),
+                              email: _get[index]['email'].toString(),
+                              no_hp: _get[index]['no_hp'].toString(),
+                              status: _get[index]['status'].toString(),
+                              redirect_url:
+                                  _get[index]['redirect_url'].toString())),
+                     
+                    );
                   }
                 },
               ),
