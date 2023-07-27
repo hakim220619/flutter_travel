@@ -29,7 +29,7 @@ class _TrackingPageState extends State<TrackingPage> {
   @override
   Widget build(BuildContext context) {
     Future getagentFrom() async {
-      var baseUrl = "https://travel.dlhcode.com/api/persediaan_tiket";
+      var baseUrl = "https://travel.dlhcode.com/api/rute";
       http.Response response = await http.get(Uri.parse(baseUrl));
       // print(response.body);
 
@@ -112,7 +112,7 @@ class _TrackingPageState extends State<TrackingPage> {
                                     // print(fromAgent);
                                     return DropdownMenuItem(
                                       value: item['id'].toString(),
-                                      child: Text("${item['asal'].toString()}"
+                                      child: Text("${item['keberangkatan'].toString()}"
                                           "- ${item['tujuan'].toString()}"),
                                     );
                                   }).toList(),

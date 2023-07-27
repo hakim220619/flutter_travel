@@ -220,7 +220,7 @@ class HttpService {
       "Authorization": "Bearer " + token.toString(),
     }, body: {
       "id_supir": id_user.toString(),
-      "id_persediaan_tiket": id_persediaan_tiket.toString(),
+      "id_jadwal": id_persediaan_tiket.toString(),
       "lat_long": lat_long.toString(),
       "nama_lokasi": nama_lokasi.toString(),
       "tgl": formattedDate,

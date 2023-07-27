@@ -23,16 +23,16 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'cetak_page.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 
-class DashboardS extends StatefulWidget {
-  const DashboardS({
+class DashboardAdmin extends StatefulWidget {
+  const DashboardAdmin({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<DashboardS> createState() => _DashboardSState();
+  State<DashboardAdmin> createState() => _DashboardAdminState();
 }
 
-class _DashboardSState extends State<DashboardS> {
+class _DashboardAdminState extends State<DashboardAdmin> {
   static final _client = http.Client();
 
   @override
@@ -209,12 +209,10 @@ class _MenuSState extends State<MenuS> {
       var token = preferences.getString('token');
       // print(id_user);
       var _riwayatTiket =
-          Uri.parse('https://travel.dlhcode.com/api/tracking_by_id_supir');
-      http.Response response = await _client.post(_riwayatTiket, headers: {
+          Uri.parse('https://travel.dlhcode.com/api/tracking');
+      http.Response response = await _client.get(_riwayatTiket, headers: {
         "Accept": "application/json",
         "Authorization": "Bearer " + token.toString(),
-      }, body: {
-        "id_supir": id_user.toString(),
       });
       print(response.body);
       if (response.statusCode == 200) {
@@ -314,18 +312,67 @@ class _MenuSState extends State<MenuS> {
   Widget build(BuildContext context) {
     final List<Widget> _widgetOptions = <Widget>[
       Center(
-        child: Container(
-          alignment: Alignment.center,
-          child: Flex(
-            direction: Axis.vertical,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              ElevatedButton(
-                  onPressed: () => scanBarcodeNormal(),
-                  child: Text('Start barcode scan')),
-              Text('Scan result : $_scanBarcode\n',
-                  style: TextStyle(fontSize: 20))
-            ],
+        child: RefreshIndicator(
+          onRefresh: refresh,
+          child: ListView.builder(
+            itemCount: _get.length,
+            itemBuilder: (context, index) => Card(
+              margin: const EdgeInsets.all(10),
+              elevation: 8,
+              child: ListTile(
+                leading: CircleAvatar(
+                  backgroundColor: Color.fromARGB(255, 48, 31, 83),
+                  child: Icon(
+                    Icons.directions_car,
+                    color: Colors.white,
+                  ),
+                ),
+                title: Text(
+                  "Dari " +
+                      _get[index]['nama_lokasi'].toString() +
+                      ' | ' +
+                      _get[index]['tujuan'].toString(),
+                  style: new TextStyle(
+                      fontSize: 15.0, fontWeight: FontWeight.bold),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                subtitle: Text(
+                  _get[index]['lat_long'].toString(),
+                  maxLines: 2,
+                  style: new TextStyle(fontSize: 14.0),
+                  overflow: TextOverflow.ellipsis,
+                ),
+                trailing: Text(
+                  _get[index]['tgl'].toString(),
+                ),
+                // onTap: () {
+                //   Navigator.push(
+                //       context,
+                //       MaterialPageRoute(
+                //           builder: (context) => TicketData(
+                //                 order_id: _get[index]['order_id'].toString(),
+                //                 nama: _get[index]['nama_pemesan'].toString(),
+                //                 tanggal:
+                //                     _get[index]['tgl_keberangkatan'].toString(),
+                //                 email: _get[index]['email'].toString(),
+                //                 no_hp: _get[index]['no_hp'].toString(),
+                //                 status: _get[index]['status'].toString(),
+                //               )));
+
+                //   Navigator.push(
+                //       context,
+                //       MaterialPageRoute(
+                //           builder: (context) => payPage(
+                //               nama: _get[index]['nama_pemesan'].toString(),
+                //               email: _get[index]['email'].toString(),
+                //               no_hp: _get[index]['no_hp'].toString(),
+                //               status: _get[index]['status'].toString(),
+                //               redirect_url:
+                //                   _get[index]['redirect_url'].toString())));
+                // },
+              ),
+            ),
           ),
         ),
       ),
@@ -484,11 +531,11 @@ class _MenuSState extends State<MenuS> {
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
               icon: Icon(Icons.home),
-              label: 'Scan',
+              label: 'Pemesanan',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.business),
-              label: 'Riwayat',
+              label: 'Tracking',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.school),
