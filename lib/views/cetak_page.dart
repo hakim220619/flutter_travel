@@ -19,6 +19,7 @@ class TicketData extends StatefulWidget {
     required this.email,
     required this.no_hp,
     required this.status,
+    required this.no_kursi,
   }) : super(key: key);
   final String order_id;
   final String nama;
@@ -26,6 +27,7 @@ class TicketData extends StatefulWidget {
   final String email;
   final String no_hp;
   final String status;
+  final String no_kursi;
 
   @override
   State<TicketData> createState() => _TicketDataState();
@@ -77,6 +79,16 @@ class _TicketDataState extends State<TicketData> {
                       fontWeight: FontWeight.bold),
                 ),
               ),
+              Padding(
+                padding: EdgeInsets.only(top: 20.0),
+                child: Text(
+                  "No Kursi: " + widget.no_kursi,
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
               Center(
                 child: Column(
                   children: [
@@ -88,13 +100,13 @@ class _TicketDataState extends State<TicketData> {
                           Padding(
                             padding: const EdgeInsets.only(top: 12.0),
                             child: ticketDetailsWidget("Nama", '${widget.nama}',
-                                'Tanggal Berangkat', '${widget.tanggal}'),
+                                'Tanggal Berangkat', '${widget.tanggal}', "No Kursi" '${widget.no_kursi}'),
                           ),
                           Padding(
                             padding:
                                 const EdgeInsets.only(top: 12.0, right: 45),
                             child: ticketDetailsWidget('Email',
-                                '${widget.email}', 'No Hp', '${widget.no_hp}'),
+                                '${widget.email}', 'No Hp', '${widget.no_hp}', "No Kursi"'${widget.no_kursi}'),
                           ),
                         ],
                       ),
@@ -105,7 +117,7 @@ class _TicketDataState extends State<TicketData> {
                       ),
                       child: Container(
                         width: 250.0,
-                        height: 40.0,
+                        height: 10.0,
                         // decoration: const BoxDecoration(
                         //     image: DecorationImage(
                         //         image: AssetImage('assets/barcode.png'),
@@ -167,7 +179,7 @@ class _TicketDataState extends State<TicketData> {
 }
 
 Widget ticketDetailsWidget(String firstTitle, String firstDesc,
-    String secondTitle, String secondDesc) {
+    String secondTitle, String secondDesc, String no_kursi) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
@@ -186,10 +198,12 @@ Widget ticketDetailsWidget(String firstTitle, String firstDesc,
                 firstDesc,
                 style: const TextStyle(color: Colors.black),
               ),
-            )
+            ),
+            
           ],
         ),
       ),
+      
       Padding(
         padding: const EdgeInsets.only(right: 20.0),
         child: Column(
@@ -205,10 +219,12 @@ Widget ticketDetailsWidget(String firstTitle, String firstDesc,
                 secondDesc,
                 style: const TextStyle(color: Colors.black),
               ),
-            )
+            ),
+            
           ],
         ),
-      )
+      ),
+      
     ],
   );
 }

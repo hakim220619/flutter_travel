@@ -32,7 +32,7 @@ class _ListOutPageState extends State<ListOutPage> {
     try {
       // print({widget.fromAgentValue});
       var _SearchUrl =
-          Uri.parse('https://travel.dlhcode.com/api/cek_persediaan_tiket');
+          Uri.parse('https://travel.eastbluetechnology.com/api/cek_persediaan_tiket');
       http.Response response = await _client.post(_SearchUrl, body: {
         "asal": widget.fromAgentValue,
         "tujuan": widget.toAgentValue,

@@ -37,7 +37,7 @@ class _DashboardSState extends State<DashboardS> {
 
   @override
   // ignore: override_on_non_overriding_member
-  static var _logoutUrl = Uri.parse('https://travel.dlhcode.com/api/logout');
+  static var _logoutUrl = Uri.parse('https://travel.eastbluetechnology.com/api/logout');
 
   Future Logout() async {
     try {
@@ -168,7 +168,7 @@ class _MenuSState extends State<MenuS> {
       var email = preferences.getString('email');
       var token = preferences.getString('token');
 
-      var _riwayatTiket = Uri.parse('https://travel.dlhcode.com/api/profile');
+      var _riwayatTiket = Uri.parse('https://travel.eastbluetechnology.com/api/profile');
       http.Response response = await _client.post(_riwayatTiket, headers: {
         "Accept": "application/json",
         "Authorization": "Bearer " + token.toString(),
@@ -209,7 +209,7 @@ class _MenuSState extends State<MenuS> {
       var token = preferences.getString('token');
       // print(id_user);
       var _riwayatTiket =
-          Uri.parse('https://travel.dlhcode.com/api/tracking_by_id_supir');
+          Uri.parse('https://travel.eastbluetechnology.com/api/tracking_by_id_supir');
       http.Response response = await _client.post(_riwayatTiket, headers: {
         "Accept": "application/json",
         "Authorization": "Bearer " + token.toString(),

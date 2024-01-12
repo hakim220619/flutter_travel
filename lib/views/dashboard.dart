@@ -32,7 +32,7 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   // ignore: override_on_non_overriding_member
-  static var _logoutUrl = Uri.parse('https://travel.dlhcode.com/api/logout');
+  static var _logoutUrl = Uri.parse('https://travel.eastbluetechnology.com/api/logout');
 
   Future Logout() async {
     try {
@@ -163,19 +163,20 @@ class _MenuState extends State<Menu> {
 
   //Future
   Future Rute() async {
-    var baseUrl = "https://travel.dlhcode.com/api/rute";
+    var baseUrl = "https://travel.eastbluetechnology.com/api/rute";
     http.Response response = await http.get(Uri.parse(baseUrl));
     if (response.statusCode == 200) {
       var jsonData = json.decode(response.body);
       setState(() {
         getRute = jsonData['data'];
+        // print(getRute);
       });
     }
   }
 
   // List toAgent = [];
   // Future getagentTo() async {
-  //   var baseUrl = "https://travel.dlhcode.com/api/tempat_agen";
+  //   var baseUrl = "https://travel.eastbluetechnology.com/api/tempat_agen";
   //   http.Response response = await http.get(Uri.parse(baseUrl));
   //   if (response.statusCode == 200) {
   //     var jsonData = json.decode(response.body);
@@ -192,7 +193,7 @@ class _MenuState extends State<Menu> {
       var id_user = preferences.getInt('id_user');
       var token = preferences.getString('token');
       var _riwayatTiket =
-          Uri.parse('https://travel.dlhcode.com/api/riwayat_tiket');
+          Uri.parse('https://travel.eastbluetechnology.com/api/riwayat_tiket');
       http.Response response = await _client.post(_riwayatTiket, headers: {
         "Accept": "application/json",
         "Authorization": "Bearer " + token.toString(),
@@ -207,7 +208,7 @@ class _MenuState extends State<Menu> {
           // print(_get);
         });
         var _orderid =
-            Uri.parse('https://travel.dlhcode.com/api/cek_transaksi');
+            Uri.parse('https://travel.eastbluetechnology.com/api/cek_transaksi');
         http.Response getOrderId = await _client.post(_orderid, body: {
           "id_user": id_user.toString(),
         });
@@ -234,7 +235,7 @@ class _MenuState extends State<Menu> {
 
             if (jsonTransaksi['status_code'] == '200') {
               var updateTransaksi =
-                  Uri.parse('https://travel.dlhcode.com/api/updateTransaksi');
+                  Uri.parse('https://travel.eastbluetechnology.com/api/updateTransaksi');
               // ignore: unused_local_variable
               http.Response getOrderId =
                   await _client.post(updateTransaksi, body: {
@@ -258,7 +259,7 @@ class _MenuState extends State<Menu> {
       var email = preferences.getString('email');
       var token = preferences.getString('token');
 
-      var _riwayatTiket = Uri.parse('https://travel.dlhcode.com/api/profile');
+      var _riwayatTiket = Uri.parse('https://travel.eastbluetechnology.com/api/profile');
       http.Response response = await _client.post(_riwayatTiket, headers: {
         "Accept": "application/json",
         "Authorization": "Bearer " + token.toString(),
@@ -536,6 +537,7 @@ class _MenuState extends State<Menu> {
                           email: _get[index]['email'].toString(),
                           no_hp: _get[index]['no_hp'].toString(),
                           status: _get[index]['status'].toString(),
+                          no_kursi: _get[index]['no_kursi'].toString(),
                         ),
                       ),
                      

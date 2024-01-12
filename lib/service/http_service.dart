@@ -17,15 +17,15 @@ import 'dart:math';
 class HttpService {
   static final _client = http.Client();
 
-  static var _loginUrl = Uri.parse('https://travel.dlhcode.com/api/login');
+  static var _loginUrl = Uri.parse('https://travel.eastbluetechnology.com/api/login');
   static var _registerUrl =
-      Uri.parse('https://travel.dlhcode.com/api/register');
+      Uri.parse('https://travel.eastbluetechnology.com/api/register');
   static var _pesanUrl =
-      Uri.parse('https://travel.dlhcode.com/api/tambah_pemesanan');
+      Uri.parse('https://travel.eastbluetechnology.com/api/tambah_pemesanan');
   static var _pesanmidtransUrl =
       Uri.parse('https://app.sandbox.midtrans.com/snap/v1/transactions');
   static var _tracking =
-      Uri.parse('https://travel.dlhcode.com/api/tambah_tracking');
+      Uri.parse('https://travel.eastbluetechnology.com/api/tambah_tracking');
 
   static login(email, password, context) async {
     // ignore: unused_local_variable

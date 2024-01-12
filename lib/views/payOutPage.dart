@@ -82,7 +82,7 @@ class TransactionDetails {
 
 class _payOutPageState extends State<payOutPage> {
   Future<List<TransactionDetails>> fetchTransaction() async {
-    var _riwayatTiket = Uri.parse('https://travel.dlhcode.com/api/cetak_tiket');
+    var _riwayatTiket = Uri.parse('https://travel.eastbluetechnology.com/api/cetak_tiket');
     http.Response response = await http.post(_riwayatTiket, body: {
       "order_id": widget.order_id,
     });
@@ -107,7 +107,7 @@ class _payOutPageState extends State<payOutPage> {
 
       if (jsonTransaksi['status_code'] == '200') {
         var updateTransaksi =
-            Uri.parse('https://travel.dlhcode.com/api/updateTransaksi');
+            Uri.parse('https://travel.eastbluetechnology.com/api/updateTransaksi');
         // ignore: unused_local_variable
         http.Response getOrderId = await http.post(updateTransaksi, body: {
           "order_id": widget.order_id,
@@ -122,7 +122,7 @@ class _payOutPageState extends State<payOutPage> {
 
   // List _get = [];
   // Future<List<DataStatus>> cekTransaksi() async {
-  //   var _riwayatTiket = Uri.parse('https://travel.dlhcode.com/api/cetak_tiket');
+  //   var _riwayatTiket = Uri.parse('https://travel.eastbluetechnology.com/api/cetak_tiket');
   //   http.Response response = await http.post(_riwayatTiket, body: {
   //     "order_id": widget.order_id,
   //   });
@@ -148,7 +148,7 @@ class _payOutPageState extends State<payOutPage> {
 
   //   if (jsonTransaksi['status_code'] == '200') {
   //     var updateTransaksi =
-  //         Uri.parse('https://travel.dlhcode.com/api/updateTransaksi');
+  //         Uri.parse('https://travel.eastbluetechnology.com/api/updateTransaksi');
   //     // ignore: unused_local_variable
   //     http.Response getOrderId = await http.post(updateTransaksi, body: {
   //       "order_id": widget.order_id,

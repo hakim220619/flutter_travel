@@ -29,7 +29,7 @@ class _TrackingPageState extends State<TrackingPage> {
   @override
   Widget build(BuildContext context) {
     Future getagentFrom() async {
-      var baseUrl = "https://travel.dlhcode.com/api/rute";
+      var baseUrl = "https://travel.eastbluetechnology.com/api/rute";
       http.Response response = await http.get(Uri.parse(baseUrl));
       // print(response.body);
 
@@ -206,7 +206,7 @@ class _TrackingPageState extends State<TrackingPage> {
                                       border: OutlineInputBorder(
                                           borderRadius:
                                               BorderRadius.circular(10)),
-                                      labelText: "Lokasi Agen"),
+                                      labelText: "Lokasi Sekarang"),
                                   validator: (value) {
                                     if (value!.isEmpty) {
                                       return "Nama tidak boleh kosong";

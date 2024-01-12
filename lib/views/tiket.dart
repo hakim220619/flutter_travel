@@ -79,13 +79,20 @@ class _TiketPageState extends State<TiketPage> {
             ElevatedButton(
               onPressed: () async {
                 if (_formKey.currentState!.validate()) {
+                  SharedPreferences preferences =
+                      await SharedPreferences.getInstance();
+                  var id_user = preferences.getInt('id_user');
+                  var token = preferences.getString('token');
                   var _riwayatTiket =
-                      Uri.parse('https://travel.dlhcode.com/api/cetak_tiket');
+                      Uri.parse('https://travel.eastbluetechnology.com/api/cetak_tiket');
                   http.Response response =
-                      await TiketPage._client.post(_riwayatTiket, body: {
+                      await TiketPage._client.post(_riwayatTiket, headers: {
+                    "Accept": "application/json",
+                    "Authorization": "Bearer " + token.toString(),
+                  }, body: {
                     "order_id": kodeBooking,
                   });
-                  print(response.body);
+                  print(response.statusCode);
 
                   if (response.statusCode == 200) {
                     var data = jsonDecode(response.body.toString());
@@ -110,7 +117,7 @@ class _TiketPageState extends State<TiketPage> {
 
                     if (jsonTransaksi['status_code'] == '200') {
                       var updateTransaksi = Uri.parse(
-                          'https://travel.dlhcode.com/api/updateTransaksi');
+                          'https://travel.eastbluetechnology.com/api/updateTransaksi');
                       // ignore: unused_local_variable
                       http.Response getOrderId =
                           await http.post(updateTransaksi, body: {
@@ -131,6 +138,7 @@ class _TiketPageState extends State<TiketPage> {
                                   email: data['data1']['email'].toString(),
                                   no_hp: data['data1']['no_hp'].toString(),
                                   status: data['data1']['status'].toString(),
+                                  no_kursi: data['data1']['no_kursi'].toString(),
                                 )));
                   } else {
                     showDialog<String>(

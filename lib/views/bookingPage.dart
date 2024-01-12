@@ -38,7 +38,7 @@ class _AddState extends State<Add> {
 
   List fromAgent = [];
   Future getagentFrom() async {
-    var baseUrl = "https://travel.dlhcode.com/api/tempat_agen";
+    var baseUrl = "https://travel.eastbluetechnology.com/api/tempat_agen";
     http.Response response = await http.get(Uri.parse(baseUrl));
     if (response.statusCode == 200) {
       var jsonData = json.decode(response.body);
@@ -50,7 +50,7 @@ class _AddState extends State<Add> {
 
   List toAgent = [];
   Future getagentTo() async {
-    var baseUrl = "https://travel.dlhcode.com/api/tempat_agen";
+    var baseUrl = "https://travel.eastbluetechnology.com/api/tempat_agen";
     http.Response response = await http.get(Uri.parse(baseUrl));
     if (response.statusCode == 200) {
       var jsonData = json.decode(response.body);

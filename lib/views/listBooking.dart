@@ -37,7 +37,7 @@ class _ListBookingState extends State<ListBooking> {
     var token = preferences.getString('token');
       // print({widget.fromAgentValue});
       var _SearchUrl =
-          Uri.parse('https://travel.dlhcode.com/api/jadwal_keberangkatan');
+          Uri.parse('https://travel.eastbluetechnology.com/api/jadwal_keberangkatan');
       http.Response response = await _client.post(_SearchUrl, headers: {
       "Accept": "application/json",
       "Authorization": "Bearer " + token.toString(),
