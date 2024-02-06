@@ -42,6 +42,7 @@ class _DashboardState extends State<Dashboard> {
         "Accept": "application/json",
         "Authorization": "Bearer " + token.toString(),
       });
+      print(response.statusCode);
       if (response.statusCode == 200) {
         SharedPreferences preferences = await SharedPreferences.getInstance();
         setState(() {
@@ -219,7 +220,7 @@ class _MenuState extends State<Menu> {
           for (var i = 0; i < dataOrderId.length; i++) {
             var orderId = dataOrderId[i]['order_id'];
             // print(i);
-            String username = 'SB-Mid-server-z5T9WhivZDuXrJxC7w-civ_k';
+            String username = 'SB-Mid-server-1De6XBimvoJ-ON1XbDl4M5rC';
             String password = '';
             String basicAuth =
                 'Basic ' + base64Encode(utf8.encode('$username:$password'));

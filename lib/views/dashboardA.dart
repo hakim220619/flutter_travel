@@ -47,6 +47,7 @@ class _DashboardAdminState extends State<DashboardAdmin> {
         "Accept": "application/json",
         "Authorization": "Bearer " + token.toString(),
       });
+      print(response.body);
       if (response.statusCode == 200) {
         SharedPreferences preferences = await SharedPreferences.getInstance();
         setState(() {

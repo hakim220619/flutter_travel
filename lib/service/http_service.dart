@@ -34,6 +34,7 @@ class HttpService {
       "email": email,
       "password": password,
     });
+    print(response.body);
     if (response.statusCode == 200) {
       var jsonUsers = jsonDecode(response.body);
 
@@ -105,7 +106,7 @@ class HttpService {
     var token = prefs.getString('token');
     Random objectname = Random();
     int number = objectname.nextInt(10000000);
-    String username = 'SB-Mid-server-z5T9WhivZDuXrJxC7w-civ_k';
+    String username = 'SB-Mid-server-1De6XBimvoJ-ON1XbDl4M5rC';
     String password = '';
     String basicAuth =
         'Basic ' + base64Encode(utf8.encode('$username:$password'));
@@ -155,7 +156,7 @@ class HttpService {
       nama, email, noHp, id_persediaan_tiket, harga, context) async {
     Random objectname = Random();
     int number = objectname.nextInt(10000000);
-    String username = 'SB-Mid-server-z5T9WhivZDuXrJxC7w-civ_k';
+    String username = 'SB-Mid-server-1De6XBimvoJ-ON1XbDl4M5rC';
     String password = '';
     String basicAuth =
         'Basic ' + base64Encode(utf8.encode('$username:$password'));
@@ -226,6 +227,7 @@ class HttpService {
       "tgl": formattedDate,
       "jam": formatterH,
     });
+    print(response.body);
     if (response.statusCode == 200) {
       var json = jsonDecode(response.body.toString());
       // print(json);
